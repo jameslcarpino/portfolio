@@ -41,4 +41,11 @@
   display: flex;
   justify-content: space-evenly;
   width: 100%;
+  margin-bottom: 1%;
+}
+.about {
+  font-size: 3rem;
+}
+.about:hover {
+  box-shadow: 5px 5px 5px 2px #808782;
 }
