@@ -1,4 +1,4 @@
-import React, { useState, useMemo, useCallBack, useEffect } from "react";
+import React, { useState, useMemo, useCallback, useEffect } from "react";
 
 const POSITION = { x: 0, y: 0 };
 const Draggable = ({ children }) => {
@@ -18,7 +18,7 @@ const Draggable = ({ children }) => {
     [state.isDragging, state.translation]
   );
 
-  const handleMouseDown = useCallBack(({ clientX, clientY }) => {
+  const handleMouseDown = useCallback(({ clientX, clientY }) => {
     setState((state) => ({
       ...state,
       isDragging: true,
@@ -26,7 +26,7 @@ const Draggable = ({ children }) => {
     }));
   }, []);
 
-  const handleMouseMove = useCallBack(
+  const handleMouseMove = useCallback(
     ({ clientX, clientY }) => {
       const translation = {
         x: clientX - state.origin.x,
@@ -41,7 +41,7 @@ const Draggable = ({ children }) => {
     [state.origin]
   );
 
-  const handleMouseUp = useCallBack(() => {
+  const handleMouseUp = useCallback(() => {
     setState((state) => ({
       ...state,
       isDragging: false,
