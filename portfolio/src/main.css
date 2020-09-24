@@ -1,8 +1,8 @@
 .home-container {
-  margin: 3%;
-  height: 100vh;
+  height: 80vh;
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
+  margin: 5%;
 }
 
 .home-container .intro-wrap {
@@ -13,6 +13,7 @@
 
 .home-container .intro-text {
   font-family: "Bebas Neue", cursive;
+
   text-align: left;
   font-size: 5rem;
   margin: 0;
@@ -24,4 +25,20 @@
   font-size: 1.5rem;
   margin: 0;
   margin-left: 10%;
+}
+
+.text-container {
+  width: 50%;
+}
+.drop-zone {
+  width: 45%;
+  height: 72vh;
+  border: 1px black solid;
+  text-align: center;
+}
+
+.icon-wrapper {
+  display: flex;
+  justify-content: space-evenly;
+  width: 100%;
 }
