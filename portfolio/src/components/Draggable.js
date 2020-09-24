@@ -26,16 +26,20 @@ const Draggable = ({ children }) => {
     }));
   }, []);
 
-  const handleMouseMove = useCallBack(() => {
-    const translation = {
-      x: clientX - state.origin.x,
-      y: clientY - state.origin.y,
-    };
-    setState((state) => ({
-      ...state,
-      translation,
-    }));
-  }, [state.origin]);
+  const handleMouseMove = useCallBack(
+    ({ clientX, clientY }) => {
+      const translation = {
+        x: clientX - state.origin.x,
+        y: clientY - state.origin.y,
+      };
+      console.log(state);
+      setState((state) => ({
+        ...state,
+        translation,
+      }));
+    },
+    [state.origin]
+  );
 
   const handleMouseUp = useCallBack(() => {
     setState((state) => ({
@@ -52,6 +56,11 @@ const Draggable = ({ children }) => {
       window.removeEventListener("mousemove", handleMouseMove);
       window.removeEventListener("mousemup", handleMouseUp);
     }
+
+    setState((state) => ({
+      ...state,
+      translation: POSITION,
+    }));
   }, [state.isDragging, handleMouseMove, handleMouseUp]);
 
   return (

@@ -1,7 +1,4 @@
-import React, { useState } from "react";
-import Board from "./Boards_Cards/Boards";
-import Card from "./Boards_Cards/Card";
-// import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
+import React from "react";
 import Draggable from "./Draggable";
 import { AiOutlineFundProjectionScreen } from "react-icons/ai";
 import { FaMale, FaEnvelopeOpenText } from "react-icons/fa";
@@ -27,25 +24,15 @@ export default function Home() {
 
         <div className="drop-zone">DROP HERE</div>
       </div>
-      <Icons>
-        <FaMale
-          className="about"
 
-          //About Icon
-        />
-        <FaEnvelopeOpenText
-          className="contact"
-          style={{ fontSize: "3rem" }}
-          //contact Icon
-        />
-
-        {/* <Draggable>
+      <TheDraggables>
+        <Draggable>
           <FaMale
             className="about"
 
             //About Icon
           />
-        </Draggable> */}
+        </Draggable>
 
         {/* <Draggable>
           <FaEnvelopeOpenText
@@ -66,12 +53,12 @@ export default function Home() {
         <Draggable>
           <GiTreasureMap style={{ fontSize: "3rem" }} className="map" />
         </Draggable> */}
-      </Icons>
+      </TheDraggables>
     </>
   );
 }
 
-const Icons = styled.div`
+const TheDraggables = styled.div`
   display: flex;
   justify-content: space-evenly;
   width: 100%;
