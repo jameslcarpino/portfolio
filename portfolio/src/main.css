@@ -1,5 +1,4 @@
 .home-container {
-  height: 80vh;
   display: flex;
   flex-direction: row;
   margin: 5%;
@@ -18,6 +17,7 @@
   font-size: 5rem;
   margin: 0;
   margin-left: 10%;
+  text-shadow: 5px 5px 5px 2px #438656;
 }
 
 .home-container .intro-p {
@@ -32,7 +32,7 @@
 }
 .drop-zone {
   width: 45%;
-  height: 72vh;
+
   border: 1px black solid;
   text-align: center;
 }
@@ -47,5 +47,14 @@
   font-size: 3rem;
 }
 .about:hover {
+  box-shadow: 5px 5px 5px 2px #808782;
+}
+.contact:hover {
+  box-shadow: 5px 5px 5px 2px #808782;
+}
+.projects:hover {
+  box-shadow: 5px 5px 5px 2px #808782;
+}
+.map:hover {
   box-shadow: 5px 5px 5px 2px #808782;
 }

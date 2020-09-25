@@ -32,11 +32,11 @@ const Draggable = ({ children }) => {
         x: clientX - state.origin.x,
         y: clientY - state.origin.y,
       };
-      console.log(state);
       setState((state) => ({
         ...state,
         translation,
       }));
+      //   onDrag({ translation, id });
     },
     [state.origin]
   );
@@ -46,6 +46,8 @@ const Draggable = ({ children }) => {
       ...state,
       isDragging: false,
     }));
+
+    // onDragEnd();
   }, []);
 
   useEffect(() => {
