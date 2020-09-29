@@ -4,11 +4,10 @@ import { v4 as uuid } from "uuid";
 import { faMale } from "../work_in_prog/icons";
 
 const iconsFromBackend = [
-  { id: uuid(), content:  },
-  { id: uuid(), content: "Second task" },
-  { id: uuid(), content: "Third task" },
-  { id: uuid(), content: "Fourth task" },
-  { id: uuid(), content: "Fifth task" },
+  { id: uuid(), content: "About" },
+  { id: uuid(), content: "Projects" },
+  { id: uuid(), content: "Contact" },
+  { id: uuid(), content: "Map" },
 ];
 
 const columnsFromBackend = {
