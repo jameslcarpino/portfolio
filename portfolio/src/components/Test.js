@@ -4,7 +4,7 @@ import { v4 as uuid } from "uuid";
 import { faMale } from "../work_in_prog/icons";
 
 const iconsFromBackend = [
-  { id: uuid(), content: [faMale] },
+  { id: uuid(), content:  },
   { id: uuid(), content: "Second task" },
   { id: uuid(), content: "Third task" },
   { id: uuid(), content: "Fourth task" },
