@@ -1,22 +1,23 @@
 import React, { useState } from "react";
 import { DragDropContext, Draggable, Droppable } from "react-beautiful-dnd";
 import { v4 as uuid } from "uuid";
-import { faMale } from "../work_in_prog/icons";
+import { FaMale, FaEnvelopeOpenText } from "react-icons/fa";
+import { AiOutlineFundProjectionScreen } from "react-icons/ai";
+import { GiTreasureMap } from "react-icons/gi";
 
 const iconsFromBackend = [
-  { id: uuid(), content: "About" },
-  { id: uuid(), content: "Projects" },
-  { id: uuid(), content: "Contact" },
-  { id: uuid(), content: "Map" },
+  { id: uuid(), content: <FaMale /> },
+  { id: uuid(), content: <FaEnvelopeOpenText /> },
+  { id: uuid(), content: <AiOutlineFundProjectionScreen /> },
+  { id: uuid(), content: <GiTreasureMap /> },
 ];
 
 const columnsFromBackend = {
   [uuid()]: {
-    name: null,
+    // name: null,
     icons: iconsFromBackend,
   },
   [uuid()]: {
-    name: "Drop Zone",
     icons: [],
   },
 };
@@ -75,7 +76,6 @@ function App() {
               }}
               key={columnId}
             >
-              <h2>{column.name}</h2>
               <div style={{ margin: 8 }}>
                 <Droppable droppableId={columnId} key={columnId}>
                   {(provided, snapshot) => {
@@ -88,8 +88,6 @@ function App() {
                             ? "lightblue"
                             : "lightgrey",
                           padding: 4,
-                          width: 250,
-                          minHeight: 500,
                         }}
                       >
                         {column.icons.map((item, index) => {
@@ -107,13 +105,10 @@ function App() {
                                     {...provided.dragHandleProps}
                                     style={{
                                       userSelect: "none",
-                                      padding: 16,
-                                      margin: "0 0 8px 0",
-                                      minHeight: "50px",
-                                      backgroundColor: snapshot.isDragging
-                                        ? "#263B4A"
-                                        : "#456C86",
-                                      color: "white",
+                                      // margin: "0 0 8px 0",
+                                      fontSize: "50px",
+                                      textAlign: "center",
+                                      color: "black",
                                       ...provided.draggableProps.style,
                                     }}
                                   >
