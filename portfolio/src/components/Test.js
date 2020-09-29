@@ -68,14 +68,7 @@ function App() {
       >
         {Object.entries(columns).map(([columnId, column], index) => {
           return (
-            <div
-              style={{
-                display: "flex",
-                flexDirection: "column",
-                alignicons: "center",
-              }}
-              key={columnId}
-            >
+            <div key={columnId}>
               <div style={{ margin: 8 }}>
                 <Droppable droppableId={columnId} key={columnId}>
                   {(provided, snapshot) => {
@@ -85,9 +78,11 @@ function App() {
                         ref={provided.innerRef}
                         style={{
                           background: snapshot.isDraggingOver
-                            ? "lightblue"
-                            : "lightgrey",
+                            ? "green"
+                            : "#f5f5f5",
                           padding: 4,
+                          border: "1px black solid",
+                          display: "flex",
                         }}
                       >
                         {column.icons.map((item, index) => {
