@@ -53,7 +53,6 @@ export default function Home() {
             //projects
           />
         </Draggable>
-
         <Draggable>
         
           <FaEnvelopeOpenText
@@ -62,7 +61,6 @@ export default function Home() {
             //contact Icon
           />
         </Draggable>
-
         <Draggable>
           <GiTreasureMap style={{ fontSize: "3rem" }} className="map" />
         </Draggable> */}
