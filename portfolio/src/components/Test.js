@@ -3,10 +3,10 @@ import { DragDropContext, Draggable, Droppable } from "react-beautiful-dnd";
 import { v4 as uuid } from "uuid";
 import { FaMale, FaEnvelopeOpenText } from "react-icons/fa";
 import { AiOutlineFundProjectionScreen } from "react-icons/ai";
-import { GiTreasureMap, GiArcheryTarget } from "react-icons/gi";
+import { GiTreasureMap } from "react-icons/gi";
+import { RiArrowDownFill } from "react-icons/ri";
 
-import { Link, Route, useHistory } from "react-router-dom";
-import About from "../components/About";
+import { useHistory } from "react-router-dom";
 
 const iconArray = [
   { id: uuid(), content: <FaMale />, desc: "About" },
@@ -22,7 +22,7 @@ const columnsFromBackend = {
   },
   [uuid()]: {
     name: "Drop Icon Here To Learn More",
-    icon: <GiArcheryTarget />,
+    icon: <RiArrowDownFill />,
     icons: [],
   },
 };
@@ -35,7 +35,9 @@ function Test() {
     console.log("getting the information from destIcons:", d.desc);
     console.log(("getting destIcons id:", d.id));
     if (d.desc === "About") {
-      push("/about");
+      setTimeout(() => {
+        push("/about");
+      }, 100);
     } else if (d.desc === "Contact") {
       push("/contact");
     } else if (d.desc === "Resumap") {
@@ -93,25 +95,25 @@ function Test() {
           return (
             <div key={columnId}>
               <div style={{ margin: 8, textAlign: "center" }}>
+                <div style={{ margin: 0 }}>
+                  <h2>{column.name}</h2>
+                  <h2>{column.icon}</h2>
+                </div>
                 <Droppable droppableId={columnId} key={columnId}>
                   {(provided, snapshot) => {
                     return (
                       <>
-                        <div style={{ margin: 0 }}>
-                          <h2>{column.name}</h2>
-                          <h2>{column.icon}</h2>
-                        </div>
                         <div
                           {...provided.droppableProps}
                           ref={provided.innerRef}
                           className="containers"
                           // onMouseUp={handleLaunchModal}
                           style={{
-                            background: "#f5f5f5",
-
-                            padding: 4,
-
-                            height: "49vh",
+                            //background: "#f5f5f5",
+                            background: snapshot.isDraggingOver
+                              ? "#F5f0F6"
+                              : "#f5f5f5",
+                            // padding: 10,
                             display: "flex",
                             flexDirection: "column",
                             justifyContent: "space-evenly",
@@ -133,7 +135,7 @@ function Test() {
                                       style={{
                                         userSelect: "none",
                                         // margin: "0 0 8px 0",
-                                        fontSize: "2.5rem",
+                                        //fontSize: ".5rem",
                                         textAlign: "center",
                                         color: "black",
                                         ...provided.draggableProps.style,
