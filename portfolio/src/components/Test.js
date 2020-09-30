@@ -4,7 +4,9 @@ import { v4 as uuid } from "uuid";
 import { FaMale, FaEnvelopeOpenText } from "react-icons/fa";
 import { AiOutlineFundProjectionScreen } from "react-icons/ai";
 import { GiTreasureMap, GiArcheryTarget } from "react-icons/gi";
-import { Modal } from "antd";
+
+import { Link, Route, useHistory } from "react-router-dom";
+import About from "../components/About";
 
 const iconArray = [
   { id: uuid(), content: <FaMale />, desc: "About" },
@@ -26,41 +28,20 @@ const columnsFromBackend = {
 };
 
 function Test() {
+  const { push } = useHistory();
   const [columns, setColumns] = useState(columnsFromBackend);
-  const [about, setAbout] = useState(true);
-  const [contact, setContact] = useState(true);
-  const [proj, setProj] = useState(true);
-  const [rmap, setRmap] = useState(true);
-  const [visible, setVisible] = useState(false);
 
-  let showModal = () => {
-    setVisible(true);
-  };
-
-  let handleOk = (e) => {
-    console.log(e);
-    setVisible(false);
-  };
-
-  let handleCancel = (e) => {
-    setVisible(false);
-  };
-
-  const handleLaunchModal = (d) => {
+  const handleLaunch = (d) => {
     console.log("getting the information from destIcons:", d.desc);
     console.log(("getting destIcons id:", d.id));
     if (d.desc === "About") {
-      setAbout(true);
-      console.log("ABOUT", about);
+      push("/about");
     } else if (d.desc === "Contact") {
-      setContact(!contact);
-      console.log("Contact", contact);
+      push("/contact");
     } else if (d.desc === "Resumap") {
-      setRmap(true);
-      console.log("Resumap", rmap);
+      push("/resumap");
     } else if (d.desc === "Projects") {
-      setProj(true);
-      console.log("Proj", proj);
+      push("/projects");
     }
   };
 
@@ -75,7 +56,7 @@ function Test() {
       const desticons = [...destColumn.icons];
       const [removed] = sourceicons.splice(source.index, 1);
       desticons.splice(destination.index, 0, removed);
-      handleLaunchModal(...desticons);
+      handleLaunch(...desticons);
 
       setColumns({
         ...columns,
@@ -105,17 +86,6 @@ function Test() {
 
   return (
     <div style={{ display: "flex", justifyContent: "center", height: "100%" }}>
-      {!about ? null : (
-        <Modal
-          visible={!visible}
-          onOk={handleOk}
-          onCancel={handleCancel}
-          onMouseUp={showModal}
-        >
-          {console.log("modal", visible)}
-          <p>AHHHH</p>
-        </Modal>
-      )}
       <DragDropContext
         onDragEnd={(result) => onDragEnd(result, columns, setColumns)}
       >
@@ -140,16 +110,11 @@ function Test() {
                             background: "#f5f5f5",
 
                             padding: 4,
-                            border: snapshot.isDraggingOver
-                              ? "1px black solid"
-                              : null,
-                            borderRadius: snapshot.IsDraggingOver
-                              ? "10px"
-                              : null,
+
                             height: "49vh",
                             display: "flex",
                             flexDirection: "column",
-                            justifyContent: "space-around",
+                            justifyContent: "space-evenly",
                           }}
                         >
                           {column.icons.map((item, index) => {
@@ -168,7 +133,7 @@ function Test() {
                                       style={{
                                         userSelect: "none",
                                         // margin: "0 0 8px 0",
-                                        fontSize: "50px",
+                                        fontSize: "2.5rem",
                                         textAlign: "center",
                                         color: "black",
                                         ...provided.draggableProps.style,
