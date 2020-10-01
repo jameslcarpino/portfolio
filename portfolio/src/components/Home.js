@@ -1,5 +1,5 @@
 import React from "react";
-import Test from "./Test";
+import DragNDrop from "./DragNDrop";
 //import styled from "styled-components";
 
 export default function Home() {
@@ -20,7 +20,7 @@ export default function Home() {
           </div>
         </div>
         <div>
-          <Test className="icon-wrapper"></Test>
+          <DragNDrop className="icon-wrapper"></DragNDrop>
         </div>
       </div>
     </>

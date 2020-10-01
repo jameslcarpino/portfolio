@@ -5,6 +5,8 @@ import { FaMale, FaEnvelopeOpenText } from "react-icons/fa";
 import { AiOutlineFundProjectionScreen } from "react-icons/ai";
 import { GiTreasureMap } from "react-icons/gi";
 import { RiArrowDownFill } from "react-icons/ri";
+// import { Modal } from "antd";
+import About from "./About";
 
 import { useHistory } from "react-router-dom";
 
@@ -27,25 +29,17 @@ const columnsFromBackend = {
   },
 };
 
-function Test() {
+// const initialLaunchState = {
+//   about: true,
+//   contact: false,
+//   projects: false,
+//   resumap: false,
+// };
+
+function DragNDrop() {
   const { push } = useHistory();
   const [columns, setColumns] = useState(columnsFromBackend);
-
-  const handleLaunch = (d) => {
-    console.log("getting the information from destIcons:", d.desc);
-    console.log(("getting destIcons id:", d.id));
-    if (d.desc === "About") {
-      setTimeout(() => {
-        push("/about");
-      }, 100);
-    } else if (d.desc === "Contact") {
-      push("/contact");
-    } else if (d.desc === "Resumap") {
-      push("/resumap");
-    } else if (d.desc === "Projects") {
-      push("/projects");
-    }
-  };
+  // const [launch, setLaunch] = useState(initialLaunchState);
 
   const onDragEnd = (result, columns, setColumns) => {
     if (!result.destination) return;
@@ -83,6 +77,27 @@ function Test() {
           icons: copiedicons,
         },
       });
+    }
+  };
+
+  const handleLaunch = (d) => {
+    console.log("getting the information from destIcons:", d.desc);
+    console.log(("getting destIcons id:", d.id));
+    if (d.desc === "About") {
+      setTimeout(() => {
+        push("/about");
+      });
+      //  setLaunch({
+      //   ...launch,
+      //   about: true,
+      //  });
+      // console.log();
+    } else if (d.desc === "Contact") {
+      push("/contact");
+    } else if (d.desc === "Resumap") {
+      push("/resumap");
+    } else if (d.desc === "Projects") {
+      push("/projects");
     }
   };
 
@@ -173,4 +188,4 @@ function Test() {
   );
 }
 
-export default Test;
+export default DragNDrop;
