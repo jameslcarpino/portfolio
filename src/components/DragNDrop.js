@@ -62,7 +62,7 @@ function DragNDrop() {
   };
 
   const handleCancel = (e) => {
-    setVisible(false);
+    window.location.reload();
   };
 
   const onDragEnd = (result, columns, setColumns) => {
