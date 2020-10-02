@@ -53,6 +53,7 @@ function DragNDrop() {
       setVisible({
         ...visible,
         contact: true,
+        about: false,
       });
     }
   };
@@ -220,28 +221,26 @@ function DragNDrop() {
         </Flex>
       </Modal> */}
       </div>
-      {visible.about === true ? (
-        <Modal
-          title="Basic Modal"
-          show={visible.about}
-          //onOk={handleOk}
-          onHide={handleCancel}
-          aria-labelledby="contained-modal-title-vcenter"
-          centered
-        >
-          <About />
-        </Modal>
-      ) : null}
-      {visible.contact === true ? (
-        <Modal
-          title="Basic Modal"
-          show={visible.contact}
-          // onOk={handleOk}
-          onHide={handleCancel}
-        >
-          <p> Contact test</p>
-        </Modal>
-      ) : null}
+      {/* {visible.about === true ? ( */}
+      <Modal
+        title="Basic Modal"
+        show={visible.about}
+        //onOk={handleOk}
+        onHide={handleCancel}
+        aria-labelledby="contained-modal-title-vcenter"
+        centered
+      >
+        <About />
+      </Modal>
+      <Modal
+        title="Basic Modal"
+        show={visible.contact}
+        // onOk={handleOk}
+        onHide={handleCancel}
+        style={{ width: "50%" }}
+      >
+        <p> Contact test</p>
+      </Modal>
     </>
   );
 }
