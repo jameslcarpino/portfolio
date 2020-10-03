@@ -224,6 +224,7 @@ function DragNDrop() {
         onHide={handleCancel}
         aria-labelledby="contained-modal-title-vcenter"
         centered
+        size="lg"
       >
         <About />
       </Modal>

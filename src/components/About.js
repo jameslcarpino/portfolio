@@ -1,7 +1,8 @@
-import React, { useState } from "react";
+import React from "react";
 import Modal from "react-bootstrap/Modal";
 import Card from "react-bootstrap/Card";
 import Image from "react-bootstrap/Image";
+import FigureImage from "react-bootstrap/FigureImage";
 import james from "./james.jpg";
 
 export default function About() {
@@ -12,7 +13,13 @@ export default function About() {
           <Card.Title>About James</Card.Title>
         </Modal.Header>
         <Modal.Body>
-          <Image src={james} alt="james" rounded />
+          <FigureImage
+            width={171}
+            height={180}
+            src={james}
+            alt="james"
+            rounded
+          />
           <Card.Text>
             As you alreayd know, my name is James. Here are some quick things
             you may not know about me!
