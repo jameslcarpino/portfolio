@@ -9,6 +9,7 @@ import { RiArrowDownFill } from "react-icons/ri";
 import About from "./About";
 import Contact from "./Contact";
 import Modal from "react-bootstrap/Modal";
+
 // import { useModal, Modal, Card, Flex, Button, Text } from "sriracha-ui";
 
 import { useHistory } from "react-router-dom";
@@ -26,9 +27,9 @@ const columnsFromBackend = {
     dropped: false,
   },
   [uuid()]: {
-    name: "Drop Icon Here To Learn More",
     icon: <RiArrowDownFill />,
     icons: [],
+    name: "Drop an icon here to learn more!",
   },
 };
 
@@ -41,6 +42,8 @@ function DragNDrop() {
   const [visible, setVisible] = useState({
     about: false,
     contact: false,
+    project: false,
+    resumap: false,
   });
 
   const showModal = (d) => {
@@ -62,7 +65,8 @@ function DragNDrop() {
   };
 
   const handleCancel = (e) => {
-    window.location.reload();
+    setVisible(false);
+    setColumns(columnsFromBackend);
   };
 
   const onDragEnd = (result, columns, setColumns) => {
@@ -107,14 +111,15 @@ function DragNDrop() {
   const handleLaunch = (d) => {
     console.log("getting the information from destIcons:", d.desc);
     console.log(("getting destIcons id:", d.id));
-    if (d.desc === "About") {
-      // setTimeout(() => {});
-      // toggleModal();
-      showModal(d);
-    } else if (d.desc === "Contact") {
-      showModal(d);
-      // toggleContact();
-    }
+    showModal(d);
+    // if (d.desc === "About") {
+    //   // setTimeout(() => {});
+    //   // toggleModal();
+    //   showModal(d);
+    // } else if (d.desc === "Contact") {
+    //   showModal(d);
+    //   // toggleContact();
+    // }
     // } else if (d.desc === "Resumap") {
     //   push("/resumap");
     // } else if (d.desc === "Projects") {
@@ -123,10 +128,11 @@ function DragNDrop() {
   };
 
   return (
-    <>
-      <div
-      //style={{ display: "flex", justifyContent: "center", height: "100vh" }}
-      >
+    <div className="droppableWrapper">
+      {/* <h2 style={{ fontSize: "1.8rem", padding: "0px" }}>
+        Want to learn more? Drop an Icon here
+      </h2> */}
+      <div style={{ display: "flex", justifyContent: "center" }}>
         <DragDropContext
           onDragEnd={(result) => onDragEnd(result, columns, setColumns)}
         >
@@ -135,28 +141,38 @@ function DragNDrop() {
               <>
                 <div key={columnId}>
                   <div style={{ margin: 0 }}>
-                    <h2 style={{ fontSize: "2rem" }}>{column.name}</h2>
+                    <h2 style={{ fontSize: "1.2rem" }}>{column.name}</h2>
                     <h2 style={{ textAlign: "center" }}>{column.icon}</h2>
                   </div>
-                  <div style={{ margin: 8, textAlign: "center" }}>
+                  <div
+                    style={{
+                      marginRight: 47,
+                      marginLeft: "-32px",
+                      textAlign: "center",
+                    }}
+                  >
                     <Droppable droppableId={columnId} key={columnId}>
                       {(provided, snapshot) => {
                         return (
                           <>
+                            {/* <div style={{ margin: 0 }}></div> */}
                             <div
                               {...provided.droppableProps}
                               ref={provided.innerRef}
                               className="containers"
                               // onMouseUp={handleLaunchModal}
                               style={{
-                                //background: "#f5f5f5",
-                                background: snapshot.isDraggingOver
-                                  ? "#F5f0F6"
-                                  : "#f5f5f5",
+                                background: "#f5f5f5",
+                                // background: snapshot.isDraggingOver
+                                //   ? "#F5f5F5"
+                                //   : "#f5f6f5",
                                 // border: snapshot.isDraggingOver
                                 //   ? "2px black solid"
                                 //   : "black",
-                                // padding: 10,
+                                boxShadow: snapshot.isDraggingOver
+                                  ? "5px 5px 5px 2px #808782"
+                                  : null,
+                                padding: 10,
                                 display: "flex",
                                 flexDirection: "column",
 
@@ -178,8 +194,6 @@ function DragNDrop() {
                                           {...provided.dragHandleProps}
                                           style={{
                                             userSelect: "none",
-                                            // margin: "0 0 8px 0",
-                                            //fontSize: ".5rem",
                                             textAlign: "center",
                                             color: "black",
                                             ...provided.draggableProps.style,
@@ -241,7 +255,7 @@ function DragNDrop() {
       >
         <p> Contact test</p>
       </Modal>
-    </>
+    </div>
   );
 }
 
