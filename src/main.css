@@ -73,15 +73,6 @@
   justify-items: center;
 }
 
-.droppable-container {
-  margin-right: 47;
-  margin-left: -32px;
-  display: flex;
-  justify-content: center;
-  align-items: space-evenly;
-  flex-wrap: wrap;
-}
-
 .second-div-dndC {
   display: flex;
 }
