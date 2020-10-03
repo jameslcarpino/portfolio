@@ -128,29 +128,20 @@ function DragNDrop() {
   };
 
   return (
-    <div className="droppableWrapper">
-      {/* <h2 style={{ fontSize: "1.8rem", padding: "0px" }}>
-        Want to learn more? Drop an Icon here
-      </h2> */}
-      <div style={{ display: "flex", justifyContent: "center" }}>
+    <div className="first-div-dndC">
+      <div className="second-div-dndC">
         <DragDropContext
           onDragEnd={(result) => onDragEnd(result, columns, setColumns)}
         >
           {Object.entries(columns).map(([columnId, column], index) => {
             return (
               <>
-                <div key={columnId}>
+                <div key={columnId} className="third-div-dndC">
                   <div style={{ margin: 0 }}>
                     <h2 style={{ fontSize: "1.2rem" }}>{column.name}</h2>
                     <h2 style={{ textAlign: "center" }}>{column.icon}</h2>
                   </div>
-                  <div
-                    style={{
-                      marginRight: 47,
-                      marginLeft: "-32px",
-                      textAlign: "center",
-                    }}
-                  >
+                  <div className="droppable-container">
                     <Droppable droppableId={columnId} key={columnId}>
                       {(provided, snapshot) => {
                         return (
@@ -159,24 +150,14 @@ function DragNDrop() {
                             <div
                               {...provided.droppableProps}
                               ref={provided.innerRef}
-                              className="containers"
+                              className="droppers"
                               // onMouseUp={handleLaunchModal}
                               style={{
-                                background: "#f5f5f5",
-                                // background: snapshot.isDraggingOver
-                                //   ? "#F5f5F5"
-                                //   : "#f5f6f5",
-                                // border: snapshot.isDraggingOver
-                                //   ? "2px black solid"
-                                //   : "black",
                                 boxShadow: snapshot.isDraggingOver
                                   ? "5px 5px 5px 2px #808782"
                                   : null,
-                                padding: 10,
                                 display: "flex",
                                 flexDirection: "column",
-
-                                // justifyContent: "space-evenly",
                               }}
                             >
                               {column.icons.map((item, index) => {

@@ -63,3 +63,29 @@
 .droppableWrapper {
   margin-top: 4%;
 }
+
+.droppers {
+  background: "#f5f5f5";
+
+  padding: 10;
+  display: flex;
+  flex-direction: row;
+  justify-items: center;
+}
+
+.droppable-container {
+  margin-right: 47;
+  margin-left: -32px;
+  display: flex;
+  justify-content: center;
+  align-items: space-evenly;
+  flex-wrap: wrap;
+}
+
+.second-div-dndC {
+  display: flex;
+}
+
+.third-div-dndC {
+  margin: 22px;
+}

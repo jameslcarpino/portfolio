@@ -1,25 +1,19 @@
 import React, { useState } from "react";
-// import { Modal, Button } from "antd";
-
-import { useModal, Modal, Flex, Button, Text } from "sriracha-ui";
-import styled from "styled-components";
+import Card from "react-bootstrap/Card";
 export default function About() {
   return (
     <>
-      {/* <Button onClick={toggle}>Toggle</Button>
-      <Modal isActive={isActive} toggle={toggle}>
-        <Flex w="40rem" h="40rem" drape>
-          <Text>I'm a modal, yo!</Text>
-          <Button autoFocus onClick={() => alert("Thanks for clicking me!")}>
-            Click me!
-          </Button>
-          <Button onClick={toggle}>Close</Button>
-        </Flex>
-      </Modal> */}
-      <Title>TEST</Title>
+      <Card>
+        <Card.Title>About James</Card.Title>
+
+        <p>
+          As you alreayd know, my name is James. Here are some quick things you
+          may not know about me!
+        </p>
+        <p>I am a human.</p>
+        <p>I am in love with learning anythign and everything I can</p>
+        <p>I will believe any and every ghost story someone tells me.</p>
+      </Card>
     </>
   );
 }
-const Title = styled.h2`
-  font-size: 200px;
-`;

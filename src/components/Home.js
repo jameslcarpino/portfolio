@@ -14,9 +14,8 @@ export default function Home() {
             <p className="intro-p"> & I'm a full stack web developer.</p>
           </div>
         </div>
-        <div>
-          <DragNDrop className="icon-wrapper"></DragNDrop>
-        </div>
+
+        <DragNDrop className="icon-wrapper"></DragNDrop>
       </div>
     </div>
   );
