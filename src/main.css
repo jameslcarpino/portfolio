@@ -82,3 +82,10 @@
 .third-div-dndC {
   margin: 22px;
 }
+
+.about-info-card {
+  padding: 2%;
+  display: flex;
+  justify-content: center;
+  align-items: space-evenly;
+}
