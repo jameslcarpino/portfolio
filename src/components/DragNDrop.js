@@ -1,14 +1,16 @@
 import React, { useState } from "react";
 import { DragDropContext, Draggable, Droppable } from "react-beautiful-dnd";
 import { v4 as uuid } from "uuid";
-import { FaMale, FaEnvelopeOpenText } from "react-icons/fa";
+import { FaMale } from "react-icons/fa";
 import { AiOutlineFundProjectionScreen } from "react-icons/ai";
-import { GiTreasureMap, GiMailbox } from "react-icons/gi";
+import { GiTreasureMap } from "react-icons/gi";
 import { RiArrowDownFill } from "react-icons/ri";
 import { BiMailSend } from "react-icons/bi";
 //import { Modal } from "antd";
 import About from "./About";
 import Contact from "./Contact";
+//import Projects from './Projects'
+
 import Modal from "react-bootstrap/Modal";
 import Tooltip from "react-bootstrap/Tooltip";
 import OverlayTrigger from "react-bootstrap/OverlayTrigger";
@@ -84,9 +86,9 @@ function DragNDrop() {
       }
     }, 400);
   };
-  const handleOk = (e) => {
-    setVisible(false);
-  };
+  // const handleOk = (e) => {
+  //   setVisible(false);
+  // };
 
   const handleCancel = (e) => {
     setVisible(false);
@@ -138,19 +140,6 @@ function DragNDrop() {
     console.log("getting the information from destIcons:", d.desc);
     console.log(("getting destIcons id:", d.id));
     showModal(d);
-    // if (d.desc === "About") {
-    //   // setTimeout(() => {});
-    //   // toggleModal();
-    //   showModal(d);
-    // } else if (d.desc === "Contact") {
-    //   showModal(d);
-    //   // toggleContact();
-    // }
-    // } else if (d.desc === "Resumap") {
-    //   push("/resumap");
-    // } else if (d.desc === "Projects") {
-    //   push("/projects");
-    // }
   };
 
   return (
@@ -251,14 +240,8 @@ function DragNDrop() {
             );
           })}
         </DragDropContext>
-
-        {/* <Modal isActive={isContact} toggleModal={toggleContact}>
-        <Flex w="40rem" h="40rem" drape>
-          <Contact />
-        </Flex>
-      </Modal> */}
       </div>
-      {/* {visible.about === true ? ( */}
+
       <Modal
         title="Basic Modal"
         show={visible.about}
@@ -275,9 +258,11 @@ function DragNDrop() {
         show={visible.contact}
         // onOk={handleOk}
         onHide={handleCancel}
-        style={{ width: "50%" }}
+        aria-labelledby="contained-modal-title-vcenter"
+        centered
+        size="lg"
       >
-        <p> Contact test</p>
+        <Contact />
       </Modal>
     </div>
   );
