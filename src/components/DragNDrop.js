@@ -47,18 +47,20 @@ function DragNDrop() {
   });
 
   const showModal = (d) => {
-    if (d.desc === "About") {
-      setVisible({
-        ...visible,
-        about: true,
-      });
-    } else if (d.desc === "Contact") {
-      setVisible({
-        ...visible,
-        contact: true,
-        about: false,
-      });
-    }
+    setTimeout(() => {
+      if (d.desc === "About") {
+        setVisible({
+          ...visible,
+          about: true,
+        });
+      } else if (d.desc === "Contact") {
+        setVisible({
+          ...visible,
+          contact: true,
+          about: false,
+        });
+      }
+    }, 400);
   };
   const handleOk = (e) => {
     setVisible(false);
@@ -66,7 +68,9 @@ function DragNDrop() {
 
   const handleCancel = (e) => {
     setVisible(false);
-    setColumns(columnsFromBackend);
+    setTimeout(() => {
+      setColumns(columnsFromBackend);
+    }, 250);
   };
 
   const onDragEnd = (result, columns, setColumns) => {
