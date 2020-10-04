@@ -3,22 +3,41 @@ import { DragDropContext, Draggable, Droppable } from "react-beautiful-dnd";
 import { v4 as uuid } from "uuid";
 import { FaMale, FaEnvelopeOpenText } from "react-icons/fa";
 import { AiOutlineFundProjectionScreen } from "react-icons/ai";
-import { GiTreasureMap } from "react-icons/gi";
+import { GiTreasureMap, GiMailbox } from "react-icons/gi";
 import { RiArrowDownFill } from "react-icons/ri";
+import { BiMailSend } from "react-icons/bi";
 //import { Modal } from "antd";
 import About from "./About";
 import Contact from "./Contact";
 import Modal from "react-bootstrap/Modal";
+import Tooltip from "react-bootstrap/Tooltip";
+import OverlayTrigger from "react-bootstrap/OverlayTrigger";
 
 // import { useModal, Modal, Card, Flex, Button, Text } from "sriracha-ui";
 
 import { useHistory } from "react-router-dom";
 
 const iconArray = [
-  { id: uuid(), content: <FaMale />, desc: "About" },
-  { id: uuid(), content: <FaEnvelopeOpenText />, desc: "Contact" },
-  { id: uuid(), content: <AiOutlineFundProjectionScreen />, desc: "Projects" },
-  { id: uuid(), content: <GiTreasureMap />, desc: "Resumap" },
+  { id: uuid(), content: <FaMale />, desc: "About", placement: "right" },
+
+  {
+    id: uuid(),
+    content: <AiOutlineFundProjectionScreen />,
+    desc: "Projects",
+    placement: "right",
+  },
+  {
+    id: uuid(),
+    content: <GiTreasureMap />,
+    desc: "Resumap",
+    placement: "right",
+  },
+  {
+    id: uuid(),
+    content: <BiMailSend />,
+    desc: "Contact",
+    placement: "right",
+  },
 ];
 
 const columnsFromBackend = {
@@ -45,6 +64,9 @@ function DragNDrop() {
     project: false,
     resumap: false,
   });
+  // const [visited, setVisited] = useState({
+  //   //adding in to change color to yellow if it has been visited and is saved in local storage.
+  // })
 
   const showModal = (d) => {
     setTimeout(() => {
@@ -142,8 +164,12 @@ function DragNDrop() {
               <>
                 <div key={columnId} className="third-div-dndC">
                   <div style={{ margin: 0 }}>
-                    <h2 style={{ fontSize: "1.2rem" }}>{column.name}</h2>
-                    <h2 style={{ textAlign: "center" }}>{column.icon}</h2>
+                    <h2 style={{ fontSize: "1.2rem", color: "#212529" }}>
+                      {column.name}
+                    </h2>
+                    <h2 style={{ textAlign: "center", color: "#212529" }}>
+                      {column.icon}
+                    </h2>
                   </div>
                   <div className="droppable-container">
                     <Droppable droppableId={columnId} key={columnId}>
@@ -184,17 +210,29 @@ function DragNDrop() {
                                             ...provided.draggableProps.style,
                                           }}
                                         >
-                                          <div className="about">
-                                            {item.content}
-                                            <p
-                                              style={{
-                                                fontSize: "10px",
-                                                marginTop: "1px",
-                                              }}
-                                            >
-                                              {item.desc}
-                                            </p>
-                                          </div>
+                                          <OverlayTrigger
+                                            key={item.placement}
+                                            placement={item.placement}
+                                            overlay={
+                                              <Tooltip
+                                                id={`tooltip-${item.placement}`}
+                                              >
+                                                {item.desc}
+                                              </Tooltip>
+                                            }
+                                          >
+                                            <div className="about">
+                                              {item.content}
+                                              <p
+                                                style={{
+                                                  fontSize: "10px",
+                                                  marginTop: "1px",
+                                                }}
+                                              >
+                                                {/* {item.desc}  considering putting back in for mobile view*/}
+                                              </p>
+                                            </div>
+                                          </OverlayTrigger>
                                         </div>
                                       );
                                     }}

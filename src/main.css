@@ -18,7 +18,7 @@
   font-size: 7rem;
   margin: 0;
 
-  text-shadow: 5px 5px 5px 2px #438656;
+  /* text-shadow: 3px 3px #438656; */
 }
 
 .home-container .intro-p {
@@ -28,8 +28,8 @@
 }
 
 .text-container {
-  width: 50%;
-  border-right: 1px black dotted;
+  width: 52%;
+  border-right: 2px #212529 dashed;
 }
 .drop-zone {
   width: 45%;
@@ -46,6 +46,8 @@
 }
 .about {
   font-size: 3.3rem;
+  color: #212529;
+  border-radius: 9px;
 }
 .about:hover {
   box-shadow: 5px 5px 5px 2px #808782;

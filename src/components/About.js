@@ -10,7 +10,7 @@ export default function About() {
   return (
     <>
       <Jumbotron>
-        <h1>About</h1>
+        <Card.Title>About</Card.Title>
         <Card>
           <Modal.Body>
             <div
