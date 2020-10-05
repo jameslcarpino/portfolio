@@ -45,7 +45,7 @@
   margin-bottom: 1%;
 }
 .about {
-  font-size: 3.3rem;
+  font-size: 3.5rem;
   color: #212529;
   border-radius: 9px;
 }
@@ -88,4 +88,10 @@
   display: flex;
   justify-content: center;
   align-items: space-evenly;
+}
+
+.socials {
+  display: flex;
+  justify-content: center;
+  /* align-items: space-evenly; */
 }

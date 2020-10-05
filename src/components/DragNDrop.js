@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { DragDropContext, Draggable, Droppable } from "react-beautiful-dnd";
 import { v4 as uuid } from "uuid";
-import { FaMale } from "react-icons/fa";
+import { FaMale, FaRegFilePdf } from "react-icons/fa";
 import { AiOutlineFundProjectionScreen } from "react-icons/ai";
 import { GiTreasureMap } from "react-icons/gi";
 import { RiArrowDownFill } from "react-icons/ri";
@@ -34,6 +34,12 @@ const iconArray = [
     desc: "Resumap",
     placement: "right",
   },
+  // {
+  //   id: uuid(),
+  //   content: <FaRegFilePdf />,
+  //   desc: "Resume",
+  //   placement: "right",
+  // },
   {
     id: uuid(),
     content: <BiMailSend />,
