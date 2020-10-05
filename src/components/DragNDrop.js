@@ -1,23 +1,22 @@
 import React, { useState } from "react";
 import { DragDropContext, Draggable, Droppable } from "react-beautiful-dnd";
 import { v4 as uuid } from "uuid";
-import { FaMale, FaRegFilePdf } from "react-icons/fa";
+import { FaMale } from "react-icons/fa";
 import { AiOutlineFundProjectionScreen } from "react-icons/ai";
 import { GiTreasureMap } from "react-icons/gi";
 import { RiArrowDownFill } from "react-icons/ri";
 import { BiMailSend } from "react-icons/bi";
-//import { Modal } from "antd";
+
 import About from "./About";
 import Contact from "./Contact";
-//import Projects from './Projects'
+import Projects from "./Projects";
+import Resumap from "./Resumap";
 
 import Modal from "react-bootstrap/Modal";
 import Tooltip from "react-bootstrap/Tooltip";
 import OverlayTrigger from "react-bootstrap/OverlayTrigger";
 
-// import { useModal, Modal, Card, Flex, Button, Text } from "sriracha-ui";
-
-import { useHistory } from "react-router-dom";
+// import { useHistory } from "react-router-dom";
 
 const iconArray = [
   { id: uuid(), content: <FaMale />, desc: "About", placement: "right" },
@@ -61,20 +60,14 @@ const columnsFromBackend = {
 };
 
 function DragNDrop() {
-  const { push } = useHistory();
+  // const { push } = useHistory();
   const [columns, setColumns] = useState(columnsFromBackend);
-  // const { isModal, toggleModal } = useModal();
-  // const { isModal: isContact, toggleModal: toggleContact } = useModal();
-  // const [isActive, toggle] = useModal();
   const [visible, setVisible] = useState({
     about: false,
     contact: false,
     project: false,
     resumap: false,
   });
-  // const [visited, setVisited] = useState({
-  //   //adding in to change color to yellow if it has been visited and is saved in local storage.
-  // })
 
   const showModal = (d) => {
     setTimeout(() => {
@@ -87,7 +80,16 @@ function DragNDrop() {
         setVisible({
           ...visible,
           contact: true,
-          about: false,
+        });
+      } else if (d.desc === "Resumap") {
+        setVisible({
+          ...visible,
+          resumap: true,
+        });
+      } else if (d.desc === "Projects") {
+        setVisible({
+          ...visible,
+          projects: true,
         });
       }
     }, 400);
@@ -251,7 +253,6 @@ function DragNDrop() {
       <Modal
         title="Basic Modal"
         show={visible.about}
-        //onOk={handleOk}
         onHide={handleCancel}
         aria-labelledby="contained-modal-title-vcenter"
         centered
@@ -262,13 +263,31 @@ function DragNDrop() {
       <Modal
         title="Basic Modal"
         show={visible.contact}
-        // onOk={handleOk}
         onHide={handleCancel}
         aria-labelledby="contained-modal-title-vcenter"
         centered
         size="lg"
       >
         <Contact />
+      </Modal>
+      <Modal
+        title="Basic Modal"
+        show={visible.project}
+        onHide={handleCancel}
+        aria-labelledby="contained-modal-title-vcenter"
+        centered
+        size="lg"
+      >
+        <Projects />
+      </Modal>
+      <Modal
+        title="Basic Modal"
+        show={visible.resumap}
+        onHide={handleCancel}
+        aria-labelledby="contained-modal-title-vcenter"
+        centered
+      >
+        <Resumap />
       </Modal>
     </div>
   );
