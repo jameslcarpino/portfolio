@@ -198,7 +198,7 @@ export default function About() {
                     </Card.Text>
                     <Card.Text style={{ fontSize: "2.5rem" }}>
                       <a
-                        href="https://jameslcarpino.com"
+                        href="https://james-carpino-2wyc.squarespace.com/"
                         target="_blank"
                         rel="noopener noreferrer"
                         style={{ color: "black", textDecoration: "none" }}
