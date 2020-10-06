@@ -16,8 +16,6 @@ import { AiFillLinkedin } from "react-icons/ai";
 export default function About() {
   return (
     <Jumbotron style={{ width: "100%" }}>
-      <Card.Header style={{ textAlign: "center" }}>About</Card.Header>
-
       <div
         style={{
           display: "flex",
