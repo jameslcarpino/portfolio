@@ -6,7 +6,8 @@ import Button from "react-bootstrap/Button";
 import ModalBody from "react-bootstrap/ModalBody";
 import { projectData } from "./projectData";
 
-export default function Projects() {
+export default function Projects(props) {
+  let { handleCancel } = props;
   return (
     <>
       {projectData.map((item) => (

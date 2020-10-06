@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { DragDropContext, Draggable, Droppable } from "react-beautiful-dnd";
 import { v4 as uuid } from "uuid";
 import { FaMale } from "react-icons/fa";
-import { AiOutlineFundProjectionScreen } from "react-icons/ai";
+import { AiOutlineFundProjectionScreen, AiOutlineClose } from "react-icons/ai";
 import { GiTreasureMap } from "react-icons/gi";
 import { RiArrowDownFill } from "react-icons/ri";
 import { BiMailSend } from "react-icons/bi";
@@ -15,6 +15,7 @@ import Resumap from "./Resumap";
 import Modal from "react-bootstrap/Modal";
 import Tooltip from "react-bootstrap/Tooltip";
 import OverlayTrigger from "react-bootstrap/OverlayTrigger";
+import Button from "react-bootstrap/Button";
 
 // import { useHistory } from "react-router-dom";
 
@@ -94,9 +95,6 @@ function DragNDrop() {
       }
     }, 400);
   };
-  // const handleOk = (e) => {
-  //   setVisible(false);
-  // };
 
   const handleCancel = (e) => {
     setVisible(false);
@@ -258,6 +256,12 @@ function DragNDrop() {
         centered
         size="lg"
       >
+        <div style={{ textAlign: "right" }}>
+          <AiOutlineClose
+            style={{ fontSize: " 2rem" }}
+            onClick={handleCancel}
+          />
+        </div>
         <About />
       </Modal>
       <Modal
@@ -268,6 +272,12 @@ function DragNDrop() {
         centered
         size="lg"
       >
+        <div style={{ textAlign: "right" }}>
+          <AiOutlineClose
+            style={{ fontSize: " 2rem" }}
+            onClick={handleCancel}
+          />
+        </div>
         <Contact />
       </Modal>
       <Modal
@@ -278,6 +288,12 @@ function DragNDrop() {
         centered
         size="lg"
       >
+        <div style={{ textAlign: "right" }}>
+          <AiOutlineClose
+            style={{ fontSize: " 2rem" }}
+            onClick={handleCancel}
+          />
+        </div>
         <Projects />
       </Modal>
       <Modal
@@ -288,6 +304,12 @@ function DragNDrop() {
         centered
         width="50%"
       >
+        <div style={{ textAlign: "right" }}>
+          <AiOutlineClose
+            style={{ fontSize: " 2rem" }}
+            onClick={handleCancel}
+          />
+        </div>
         <Resumap />
       </Modal>
     </div>
