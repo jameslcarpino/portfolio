@@ -15,7 +15,6 @@ import Resumap from "./Resumap";
 import Modal from "react-bootstrap/Modal";
 import Tooltip from "react-bootstrap/Tooltip";
 import OverlayTrigger from "react-bootstrap/OverlayTrigger";
-import Button from "react-bootstrap/Button";
 
 // import { useHistory } from "react-router-dom";
 
