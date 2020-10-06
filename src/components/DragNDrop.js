@@ -158,9 +158,7 @@ function DragNDrop() {
               <>
                 <div key={columnId} className="third-div-dndC">
                   <div style={{ margin: 0 }}>
-                    <h2 style={{ fontSize: "1.2rem", color: "#212529" }}>
-                      {column.name}
-                    </h2>
+                    <h2 className="drop-text">{column.name}</h2>
                     <h2 style={{ textAlign: "center", color: "#212529" }}>
                       {column.icon}
                     </h2>

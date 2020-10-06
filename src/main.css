@@ -27,10 +27,31 @@
   margin: 0;
 }
 
+@media only screen and (max-width: 1145px) {
+  .text-container {
+    width: 50%;
+  }
+  .home-container .intro-p {
+    text-align: left;
+    font-size: 1.8rem;
+    margin: 0;
+  }
+
+  .home-container .intro-text {
+    font-family: "Bebas Neue", cursive;
+    text-align: left;
+    font-size: 6rem;
+    margin: 0;
+
+    /* text-shadow: 3px 3px #438656; */
+  }
+}
+
 .text-container {
   width: 52%;
   border-right: 2px #212529 dashed;
 }
+
 .drop-zone {
   width: 45%;
 
@@ -83,6 +104,19 @@
   margin: 22px;
 }
 
+.drop-text {
+  font-size: 1.2rem;
+  color: #212529;
+}
+
+@media only screen and (max-width: 1114px) {
+  .drop-text {
+    font-size: 1rem;
+  }
+  .third-div-dndC {
+    margin: 10px;
+  }
+}
 .about-info-card {
   padding: 2%;
   display: flex;
@@ -94,4 +128,127 @@
   display: flex;
   justify-content: center;
   /* align-items: space-evenly; */
+}
+
+/* media breaks */
+@media only screen and (max-width: 962px) {
+  .text-container {
+    width: 50%;
+  }
+  .home-container .intro-p {
+    text-align: left;
+    font-size: 1.5rem;
+    margin: 0;
+  }
+
+  .home-container .intro-text {
+    font-family: "Bebas Neue", cursive;
+    text-align: left;
+    font-size: 5rem;
+    margin: 0;
+  }
+  .drop-text {
+    font-size: 1rem;
+  }
+  .third-div-dndC {
+    margin: 5px;
+  }
+  .about {
+    font-size: 2.5rem;
+  }
+}
+@media only screen and (max-width: 835px) {
+  .text-container {
+    width: 50%;
+  }
+  .home-container .intro-p {
+    text-align: left;
+    font-size: 1.2rem;
+    margin: 0;
+  }
+
+  .home-container .intro-text {
+    font-family: "Bebas Neue", cursive;
+    text-align: left;
+    font-size: 4rem;
+    margin-right: 0%;
+  }
+  .drop-text {
+    font-size: 1rem;
+  }
+  .third-div-dndC {
+    margin-left: 20px;
+  }
+  .about {
+    font-size: 2.2rem;
+  }
+}
+
+@media only screen and (max-width: 724px) {
+  .home-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  }
+  .home-container .intro-p {
+    text-align: center;
+    font-size: 1rem;
+    margin: 0;
+  }
+
+  .home-container .intro-text {
+    font-family: "Bebas Neue", cursive;
+    text-align: center;
+    font-size: 3rem;
+    margin-right: 0%;
+  }
+  .text-container {
+    border-right: none;
+  }
+  .second-div-dndC {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    margin: 0;
+    border-top: 1px black dashed;
+  }
+
+  .about {
+    display: flex;
+
+    margin: 0;
+    align-items: center;
+  }
+}
+
+@media only screen and (max-width: 497px) {
+  .home-container .intro-p {
+    text-align: center;
+    font-size: 0.8rem;
+    margin: 0;
+  }
+
+  .home-container .intro-text {
+    font-family: "Bebas Neue", cursive;
+    text-align: center;
+    font-size: 2rem;
+    margin-right: 0%;
+  }
+}
+@media only screen and (max-width: 497px) {
+  .drop-text {
+    font-size: 0.7rem;
+  }
+}
+@media only screen and (max-width: 332px) {
+  .drop-text {
+    font-size: 0.5rem;
+  }
+  .home-container .intro-p {
+    font-size: 0.7rem;
+  }
+  .home-container .intro-text {
+    font-size: 1.5rem;
+  }
 }
