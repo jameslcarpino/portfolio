@@ -272,7 +272,7 @@ function DragNDrop() {
       </Modal>
       <Modal
         title="Basic Modal"
-        show={visible.project}
+        show={visible.projects}
         onHide={handleCancel}
         aria-labelledby="contained-modal-title-vcenter"
         centered
@@ -286,6 +286,7 @@ function DragNDrop() {
         onHide={handleCancel}
         aria-labelledby="contained-modal-title-vcenter"
         centered
+        width="50%"
       >
         <Resumap />
       </Modal>
