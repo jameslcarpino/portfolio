@@ -258,7 +258,7 @@ function DragNDrop() {
       >
         <div style={{ textAlign: "right" }}>
           <AiOutlineClose
-            style={{ fontSize: " 2rem" }}
+            style={{ fontSize: " 2rem", cursor: "pointer" }}
             onClick={handleCancel}
           />
         </div>
@@ -274,7 +274,7 @@ function DragNDrop() {
       >
         <div style={{ textAlign: "right" }}>
           <AiOutlineClose
-            style={{ fontSize: " 2rem" }}
+            style={{ fontSize: " 2rem", cursor: "pointer" }}
             onClick={handleCancel}
           />
         </div>
@@ -290,7 +290,7 @@ function DragNDrop() {
       >
         <div style={{ textAlign: "right" }}>
           <AiOutlineClose
-            style={{ fontSize: " 2rem" }}
+            style={{ fontSize: " 2rem", cursor: "pointer" }}
             onClick={handleCancel}
           />
         </div>
@@ -306,7 +306,7 @@ function DragNDrop() {
       >
         <div style={{ textAlign: "right" }}>
           <AiOutlineClose
-            style={{ fontSize: " 2rem" }}
+            style={{ fontSize: " 2rem", cursor: "pointer" }}
             onClick={handleCancel}
           />
         </div>
