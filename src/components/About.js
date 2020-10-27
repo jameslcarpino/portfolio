@@ -142,8 +142,8 @@ export default function About() {
                 <Card.Body>
                   <Card.Subtitle>Things I'm currently learning</Card.Subtitle>
                   <Card.Text style={{ fontSize: "12px" }}>
-                    TypeScript | C# | Swift | React Query | React Native |
-                    Angular JS | Next JS | Vue JS
+                    TypeScript | C# | Swift | React Query | React Native | Next
+                    JS | Vue JS
                   </Card.Text>
                 </Card.Body>
               </Card>
