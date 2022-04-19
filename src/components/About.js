@@ -32,10 +32,10 @@ export default function About() {
                 <Card.Text>
                   As mentioned before, my name is James Carpino.
                 </Card.Text>
-                <Card.Text>I'm a full stack web developer.</Card.Text>
+                <Card.Text>I'm a lot of different things!.</Card.Text>
                 <Card.Text>
                   Formerly I was a filmmaker, photographer, baker, and
-                  wilderness first responder.
+                  wilderness first responder. Currently I work for Mapbox as a Support Engineer.
                 </Card.Text>
 
                 <Card.Title style={{ textAlign: "center" }}>

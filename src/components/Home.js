@@ -11,7 +11,7 @@ export default function Home() {
             <h3 className="intro-text">Is James</h3>
           </div>
           <div>
-            <p className="intro-p"> & I'm a full stack web developer.</p>
+            {/* <p className="intro-p"> & I'm a full stack web developer.</p> */}
           </div>
         </div>
 
