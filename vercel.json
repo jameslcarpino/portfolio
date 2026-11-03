@@ -15,6 +15,14 @@
     {
       "source": "/human-idiot/:path*",
       "destination": "https://human-idiot.vercel.app/:path*"
+    },
+    {
+      "source": "/maps/etymapology",
+      "destination": "https://etymapology.vercel.app/maps/etymapology"
+    },
+    {
+      "source": "/maps/etymapology/:path*",
+      "destination": "https://etymapology.vercel.app/maps/etymapology/:path*"
     }
   ]
 }
