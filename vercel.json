@@ -1,0 +1,20 @@
+{
+  "buildCommand": "CI=false NODE_OPTIONS=--openssl-legacy-provider react-scripts build",
+  "redirects": [
+    {
+      "source": "/human-idiot",
+      "destination": "/human-idiot/",
+      "permanent": false
+    }
+  ],
+  "rewrites": [
+    {
+      "source": "/human-idiot/",
+      "destination": "https://human-idiot.vercel.app/"
+    },
+    {
+      "source": "/human-idiot/:path*",
+      "destination": "https://human-idiot.vercel.app/:path*"
+    }
+  ]
+}
