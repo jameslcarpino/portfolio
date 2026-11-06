@@ -1,0 +1,71 @@
+/* Deliberately bare. Styling is a later conversation. */
+
+:root {
+  --ink: #111;
+  --paper: #fff;
+  --faint: #777;
+  --rule: #ddd;
+  --measure: 38rem;
+}
+
+html {
+  color: var(--ink);
+  background: var(--paper);
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 18px;
+  line-height: 1.5;
+}
+
+body {
+  max-width: var(--measure);
+  margin: 0 auto;
+  padding: 2rem 1rem 4rem;
+}
+
+a {
+  color: inherit;
+}
+
+h1, h2, h3 {
+  font-weight: normal;
+  line-height: 1.2;
+}
+
+h1 { font-size: 1.6rem; margin: 2rem 0 0.25rem; }
+h2 { font-size: 1.1rem; margin: 2.5rem 0 0.5rem; text-transform: lowercase; letter-spacing: 0.02em; }
+
+/* masthead */
+.masthead {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: 0.5rem 1.5rem;
+  padding-bottom: 0.75rem;
+  border-bottom: 1px solid var(--ink);
+}
+.masthead .name { text-decoration: none; }
+.masthead nav { display: flex; gap: 1rem; }
+.masthead nav a { color: var(--faint); text-decoration: none; }
+.masthead nav a:hover { color: var(--ink); text-decoration: underline; }
+
+/* lists */
+ul.things, ul.posts { list-style: none; padding: 0; margin: 0; }
+ul.things li, ul.posts li { margin: 0.5rem 0; }
+ul.things span { color: var(--faint); }
+ul.posts time { color: var(--faint); font-variant-numeric: tabular-nums; margin-right: 0.75rem; }
+ul.posts .summary { margin: 0.1rem 0 0; color: var(--faint); }
+
+/* articles */
+article header time { color: var(--faint); }
+article img { max-width: 100%; }
+article pre { overflow-x: auto; padding: 0.75rem; border: 1px solid var(--rule); font-size: 0.85em; }
+article blockquote { margin: 1rem 0; padding-left: 1rem; border-left: 2px solid var(--rule); color: #444; }
+.back { margin-top: 3rem; }
+
+footer {
+  margin-top: 4rem;
+  padding-top: 0.75rem;
+  border-top: 1px solid var(--rule);
+  color: var(--faint);
+}

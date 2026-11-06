@@ -1,0 +1,39 @@
+---
+import "../styles/zine.css";
+
+interface Props {
+  title?: string;
+  description?: string;
+}
+const { title, description } = Astro.props;
+const fullTitle = title ? `${title} — James Carpino` : "James Carpino";
+---
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{fullTitle}</title>
+    {description && <meta name="description" content={description} />}
+    <link rel="icon" href="/favicon.ico" sizes="32x32" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+  </head>
+  <body>
+    <header class="masthead">
+      <a class="name" href="/">James Carpino</a>
+      <nav>
+        <a href="/blog">writing</a>
+        <a href="/maps/etymapology">etymapology</a>
+        <a href="/human-idiot">human idiot</a>
+      </nav>
+    </header>
+    <main>
+      <slot />
+    </main>
+    <footer>
+      <p>
+        <a href="mailto:jameslcarpino@gmail.com">email</a>{" · "}<a href="https://github.com/jameslcarpino">github</a>
+      </p>
+    </footer>
+  </body>
+</html>

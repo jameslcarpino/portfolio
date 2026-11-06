@@ -1,5 +1,5 @@
 {
-  "buildCommand": "CI=false NODE_OPTIONS=--openssl-legacy-provider react-scripts build",
+  "framework": "astro",
   "redirects": [
     {
       "source": "/human-idiot",
