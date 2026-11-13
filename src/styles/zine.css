@@ -206,6 +206,18 @@ body.dragging { user-select: none; }
 .tray > .min:hover { top: -2px; left: -2px; box-shadow: inset 0 0 0 2px var(--box-hi), 5px 5px 0 rgba(0,0,0,0.75); }
 .min .bar { margin: 0; border-bottom: 0; }
 
+/* the home page is a desktop: boxes are windows you drag and stack, nothing scrolls */
+body.desk .viewport { overflow: hidden; }
+body.desk main { position: absolute; inset: 0; z-index: auto; padding: 0; }
+body.desk main > section {
+  position: absolute; left: var(--x); top: var(--y); width: var(--w);
+  max-width: none; max-height: calc(100% - var(--y) - 30px); margin: 0;
+  display: flex; flex-direction: column;
+  box-shadow: inset 0 0 0 2px var(--box-hi), 4px 4px 0 rgba(0,0,0,0.75);
+}
+body.desk main > section > .bar { flex: none; }
+body.desk main > section > .body { min-height: 0; overflow: auto; }
+
 /* desktop icon, bottom right */
 .desk-icon {
   /* a desktop icon: it sits on the scene, under the boxes and windows */
@@ -353,6 +365,10 @@ html[data-boot="1"] body > :not(#boot) { visibility: hidden; }
   .desk-icon img { width: 40px; height: 40px; }
   .desk-icon span { font-size: 9px; }
   .status { font-size: 10px; padding: 2px 8px 1px; }
+  /* if a desktop gets squeezed to phone width, fall back to the stacked layout */
+  body.desk .viewport { overflow-y: auto; }
+  body.desk main { position: relative; inset: auto; padding: 10px 10px 90px; }
+  body.desk main > section { position: relative; left: 0; top: 0; width: auto; max-height: none; margin: 0 0 14px; display: block; }
   ul.grid { grid-template-columns: repeat(2, 1fr); gap: 6px; }
   ul.grid.small { grid-template-columns: repeat(2, 1fr); }
   #dos { font-size: 16px; padding: 12px 14px; }

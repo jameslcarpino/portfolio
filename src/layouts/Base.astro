@@ -80,11 +80,37 @@ const postCount = (await getCollection("blog", ({ data }) => !data.draft)).lengt
           if (t.matches(SEL)) window.__activate(t);
         }, true);
         var cards = document.querySelectorAll("main > section, main > article");
-        var tray = document.querySelector(".tray");
+        var tray = document.querySelector(".tray"), scr = document.querySelector(".screen");
         var key = "min2:" + location.pathname;
         var saved = {};
         try { saved = JSON.parse(localStorage.getItem(key) || "{}"); } catch (e) {}
         function save() { try { localStorage.setItem(key, JSON.stringify(saved)); } catch (e) {} }
+        function clamp(n, lo, hi) { return Math.max(lo, Math.min(hi, n)); }
+
+        // one z counter for boxes and app windows alike, so anything can sit on anything
+        window.__zc = 10;
+        window.__top = function (el) { el.style.zIndex = ++window.__zc; };
+
+        // the home page is a desktop: the boxes are windows you drag and stack, and
+        // nothing scrolls. First visit fans them out like a cascade, ABOUT in front.
+        // Phones keep the stacked, scrolling layout.
+        var home = location.pathname === "/" || location.pathname === "/index.html";
+        var desk = home && !window.matchMedia("(max-width: 700px)").matches;
+        var DKEY = "desk:v1", desks = {};
+        if (desk) {
+          document.body.classList.add("desk");
+          try { desks = JSON.parse(localStorage.getItem(DKEY) || "{}"); } catch (e) {}
+        }
+        function dsave() { try { localStorage.setItem(DKEY, JSON.stringify(desks)); } catch (e) {} }
+        var WIDTHS = { ABOUT: 560, PROJECTS: 500, GALLERY: 480, BLOG: 380 };
+        var HUD = 30, placers = [], tops = [];
+        function placeCard(card, st) {
+          var vw = scr.clientWidth, vh = scr.clientHeight;
+          var w = clamp(st.w, 200, vw - 16);
+          var x = clamp(st.x, 0, Math.max(0, vw - w)), y = clamp(st.y, HUD, Math.max(HUD, vh - 60));
+          card.style.setProperty("--x", x + "px"); card.style.setProperty("--y", y + "px"); card.style.setProperty("--w", w + "px");
+        }
+
         Array.prototype.forEach.call(cards, function (card, i) {
           var head = card.querySelector("h1, h2, h3");
           var title = card.dataset.title || (head && head.textContent.trim()) || "";
@@ -100,6 +126,7 @@ const postCount = (await getCollection("blog", ({ data }) => !data.draft)).lengt
           label.textContent = title;
           var btn = document.createElement("button");
           btn.type = "button";
+          var st = null;
           function render() {
             var min = !!saved[id];
             card.classList.toggle("min", min);
@@ -109,18 +136,68 @@ const postCount = (await getCollection("blog", ({ data }) => !data.draft)).lengt
             btn.setAttribute("aria-expanded", String(!min));
             btn.setAttribute("aria-label", (min ? "Restore " : "Minimize ") + title);
           }
+          function lift() { if (!st) return; window.__top(card); st.z = window.__zc; dsave(); }
           function toggle() {
             saved[id] = !saved[id]; save(); render();
             // a box you bring back takes the focus; a box you put away gives it up
+            if (!saved[id]) lift();
             if (window.__activate) window.__activate(saved[id] ? null : card);
           }
           btn.addEventListener("click", function (e) { e.stopPropagation(); toggle(); });
           bar.addEventListener("click", function () { if (card.classList.contains("min")) toggle(); });
           bar.appendChild(label);
           bar.appendChild(btn);
-          card.insertBefore(bar, card.firstChild);
+
+          if (desk) {
+            // the box becomes bar + scrolling body, placed by --x/--y/--w
+            var body = document.createElement("div");
+            body.className = "body";
+            while (card.firstChild) body.appendChild(card.firstChild);
+            card.appendChild(bar); card.appendChild(body);
+            st = desks[id];
+            if (!st) {
+              var k = cards.length - 1 - i; // last in the cascade is the first box, in front
+              st = desks[id] = { x: 24 + k * 28, y: 44 + k * 34, w: WIDTHS[id] || 480, z: 10 + k + 1 };
+            }
+            if (!st.w) st.w = WIDTHS[id] || 480;
+            placeCard(card, st);
+            placers.push(function () { placeCard(card, st); });
+            tops.push({ card: card, st: st });
+            card.addEventListener("pointerdown", function () { if (!saved[id]) lift(); });
+            // drag by the title bar
+            bar.addEventListener("pointerdown", function (e) {
+              if (saved[id] || e.button !== 0 || (e.target.closest && e.target.closest("button"))) return;
+              var r = scr.getBoundingClientRect();
+              var sx = e.clientX - r.left - card.offsetLeft, sy = e.clientY - r.top - card.offsetTop;
+              bar.setPointerCapture(e.pointerId);
+              document.body.classList.add("dragging");
+              function mv(ev) {
+                st.x = clamp(ev.clientX - r.left - sx, 0, Math.max(0, scr.clientWidth - card.offsetWidth));
+                st.y = clamp(ev.clientY - r.top - sy, HUD, Math.max(HUD, scr.clientHeight - 60));
+                card.style.setProperty("--x", st.x + "px"); card.style.setProperty("--y", st.y + "px");
+              }
+              function up() {
+                bar.removeEventListener("pointermove", mv); bar.removeEventListener("pointerup", up); bar.removeEventListener("pointercancel", up);
+                document.body.classList.remove("dragging"); dsave();
+              }
+              bar.addEventListener("pointermove", mv); bar.addEventListener("pointerup", up); bar.addEventListener("pointercancel", up);
+              e.preventDefault();
+            });
+          } else {
+            card.insertBefore(bar, card.firstChild);
+          }
           render();
         });
+
+        if (desk) {
+          // restore the stacking order, and the box on top has the focus
+          tops.sort(function (a, b) { return (a.st.z || 0) - (b.st.z || 0); });
+          var front = null;
+          tops.forEach(function (t) { window.__top(t.card); t.st.z = window.__zc; if (!t.card.classList.contains("min")) front = t.card; });
+          dsave();
+          if (front) window.__activate(front);
+          window.addEventListener("resize", function () { placers.forEach(function (f) { f(); }); });
+        }
       })();
     </script>
 
@@ -200,7 +277,7 @@ const postCount = (await getCollection("blog", ({ data }) => !data.draft)).lengt
         ];
         var home = location.pathname === "/" || location.pathname === "/index.html";
         var tray = document.querySelector(".tray"), scr = document.querySelector(".screen");
-        var KEY = "win:v1", state = {}, wins = {}, z = 10;
+        var KEY = "win:v1", state = {}, wins = {};
         try { state = JSON.parse(localStorage.getItem(KEY) || "{}"); } catch (e) {}
         function save() { try { localStorage.setItem(KEY, JSON.stringify(state)); } catch (e) {} }
 
@@ -231,7 +308,7 @@ const postCount = (await getCollection("blog", ({ data }) => !data.draft)).lengt
         });
         if (!home) return;
 
-        function raise(w) { w.style.zIndex = ++z; window.__activate(w); }
+        function raise(w) { window.__top(w); window.__activate(w); }
         function clamp(n, lo, hi) { return Math.max(lo, Math.min(hi, n)); }
 
         function place(w, app, st) {
