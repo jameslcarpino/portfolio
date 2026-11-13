@@ -334,8 +334,17 @@ html[data-boot="1"] #boot {
 html[data-boot="1"] body > :not(#boot) { visibility: hidden; }
 #dos { margin: 0; padding: 18px 22px; font: 22px/1.25 "VT323", "Courier New", monospace; white-space: pre-wrap; -webkit-font-smoothing: none; }
 #logo { display: none; position: absolute; inset: 0; place-items: center; align-content: center; gap: 8px; text-align: center; }
-#logo .mark { font-size: 44px; color: #4be04b; text-shadow: 3px 3px 0 #0f4a0f; }
-#logo .presents { font-size: 14px; color: #4be04b; text-transform: uppercase; letter-spacing: 0.3em; }
+/* the Sierra card: the sphere is our own headland (scripts/sierra.mjs), the name in the blue gradient */
+#logo .sphere { display: block; width: 300px; height: 300px; }
+#logo .mark {
+  margin-top: 6px;
+  font: italic 900 54px/1 "Helvetica Neue", Helvetica, Arial, sans-serif;
+  -webkit-font-smoothing: antialiased; letter-spacing: 0.08em; text-transform: uppercase;
+  color: #35b8f0; text-shadow: none;
+  background: linear-gradient(#c8f6ff 0%, #35b8f0 48%, #0a46ad 100%);
+  -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;
+}
+#logo .presents { font-size: 13px; color: #2a8fd0; text-transform: uppercase; letter-spacing: 0.4em; }
 #boot.logo #dos { display: none; }
 #boot.logo #logo { display: grid; }
 #boot.logo .anykey { display: none; }
@@ -372,7 +381,8 @@ html[data-boot="1"] body > :not(#boot) { visibility: hidden; }
   ul.grid { grid-template-columns: repeat(2, 1fr); gap: 6px; }
   ul.grid.small { grid-template-columns: repeat(2, 1fr); }
   #dos { font-size: 16px; padding: 12px 14px; }
-  #logo .mark { font-size: 28px; }
+  #logo .sphere { width: 200px; height: 200px; }
+  #logo .mark { font-size: 30px; }
   .death { margin: 16px 0 0; max-width: none; }
   a.fuck { font-size: 20px; }
 }

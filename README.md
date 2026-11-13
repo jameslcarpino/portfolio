@@ -51,7 +51,10 @@ The site is styled as a Sierra SCI1 adventure game (Longbow, King's Quest V, Spa
   grays onto a green-to-gold ramp). Pages pick a scene with the `scene` prop on `Base`. Originals live in `scene-src/`.
 - **Fonts.** Chicago (ChicagoFLF, public domain) loads from Font Library. Body text wants Toronto: drop Kreative Korp's
   `Torrance.ttf` into `public/fonts/` and it is picked up; until then it falls back to Roboto Slab.
-- **Boot.** A DOS prompt and logo card play once per browser session; any key skips. Clear `sessionStorage` to see it again.
+- **Boot.** A DOS prompt and a Sierra-style title card play once per browser session; the prompt waits for a key.
+  Clear `sessionStorage` to see it again. The sphere on the card is `public/boot-logo.png`, made from a photo of the
+  headland at Cape Disappointment (`scene-src/headland.jpg`) by `node scripts/sierra.mjs`: it traces the skyline,
+  recolours the rock in Sierra blues from its own light and shade, and slices it with the blinds.
 - **404** is the Sierra death dialog.
 
 ## Running locally
