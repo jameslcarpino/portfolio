@@ -5,7 +5,7 @@ import vercel from "@astrojs/vercel";
 export default defineConfig({
   site: "https://www.jameslcarpino.com",
   output: "static",
-  trailingSlash: "never",
+  trailingSlash: "ignore",
   build: { format: "file" },
   adapter: vercel(),
 });
