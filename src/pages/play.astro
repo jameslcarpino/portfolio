@@ -107,7 +107,7 @@
         if (c === "smash") return arg ? "close. copy it exactly." : "smash what?";
         if (c === "help" || c === "?") return "DIR          list files\nRUN <file>   run a program\nOPEN <file>  open a file\nTYPE <file>  show a text file\nCLS          clear the screen\n\nTry: open readme.txt";
         if (c === "cls" || c === "clear") { out.textContent = ""; return ""; }
-        const README = "help me... the darkness... it surrounds. if i am not able to escape i fear it will swallow me. if we do not smash the sea, the sea will smash us. so i ask, if we do not smash the sea, who will? so i answer. i answer the call. i smash the sea, so the sea cannot smash us.";
+        const README = "help me... the darkness... it surrounds. if i am not able to escape i fear it will swallow me. if we do not smash the sea, the sea will smash us. so i ask, if we do not smash the sea, who will? so i answer. i answer the call. i smash the sea, so the sea cannot smash us.\n\n    run " + EXE;
         const isReadme = (a) => a === "readme.txt" || a === "readme";
         const isSecrets = (a) => a === ".secrets" || a === "secrets";
         // .secrets: open/type shows what is inside; run/exec (or the bare name) runs it
