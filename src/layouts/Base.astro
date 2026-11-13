@@ -29,7 +29,7 @@ const postCount = (await getCollection("blog", ({ data }) => !data.draft)).lengt
       // Before first paint: decide whether to boot, and restore the scanline switch.
       (function () {
         var root = document.documentElement;
-        if (window.self !== window.top) { root.dataset.framed = "1"; return; }
+        if (window.self !== window.top && !/[?&]full(=|&|$)/.test(location.search)) { root.dataset.framed = "1"; return; }
         try {
           if (!sessionStorage.getItem("booted")) root.dataset.boot = "1";
         } catch (e) {}
