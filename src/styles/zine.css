@@ -208,7 +208,8 @@ body.dragging { user-select: none; }
 
 /* desktop icon, bottom right */
 .desk-icon {
-  position: absolute; right: 18px; bottom: 30px; z-index: 2;
+  /* a desktop icon: it sits on the scene, under the boxes and windows */
+  position: absolute; right: 18px; bottom: 30px; z-index: 0;
   display: flex; flex-direction: column; align-items: center; gap: 3px;
   width: 120px; text-decoration: none; color: var(--box-hi); text-align: center;
 }
