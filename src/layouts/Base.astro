@@ -266,7 +266,7 @@ const postCount = (await getCollection("blog", ({ data }) => !data.draft)).lengt
           frame.src = st.src || app.url || app.path;
           w.appendChild(bar); w.appendChild(frame);
 
-          function restore() { st.min = false; place(w, app, st); raise(w); save(); }
+          function restore() { st.min = false; place(w, app, st); raise(w); save(); setTimeout(function () { frame.focus(); }, 0); }
           minb.addEventListener("click", function (e) {
             e.stopPropagation();
             if (st.min) { restore(); return; }
@@ -303,9 +303,11 @@ const postCount = (await getCollection("blog", ({ data }) => !data.draft)).lengt
             if (cw && ch && (cw !== st.w || ch !== st.h)) { st.w = cw; st.h = ch; save(); }
           }).observe(w);
 
-          // keep the saved src in step with where the frame navigates
+          // keep the saved src in step with where the frame navigates, and hand it
+          // keyboard focus when it is the window on top (so the terminal prompt is live)
           frame.addEventListener("load", function () {
             try { var l = frame.contentWindow.location; st.src = l.pathname + l.search + l.hash; save(); } catch (e) {}
+            if (w.classList.contains("active") && !st.min) frame.focus();
           });
 
           wins[app.id] = w;
@@ -320,7 +322,7 @@ const postCount = (await getCollection("blog", ({ data }) => !data.draft)).lengt
           var frame = w.querySelector("iframe");
           if (src && frame.getAttribute("src") !== src) { st.src = src; frame.src = src; }
           place(w, app, st);
-          if (raise_) raise(w);
+          if (raise_) { raise(w); setTimeout(function () { frame.focus(); }, 0); }
           save();
         }
 
