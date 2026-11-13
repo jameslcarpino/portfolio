@@ -63,8 +63,10 @@ body {
 
 /* the 4:3 screen, centred, black outside it */
 .screen {
-  --pad-top: 32px; --pad: 24px;
-  position: fixed; inset: var(--pad-top) var(--pad) var(--pad); margin: auto;
+  --pad-top: 28px; --pad: 24px;
+  /* centred left to right; when the window is taller than 4:3 the screen sits at the
+     bottom rather than floating, so the status line is always along the bottom edge */
+  position: fixed; inset: var(--pad-top) var(--pad) var(--pad); margin: auto auto 0;
   width: min(calc(100vw - 2 * var(--pad)), calc((100dvh - var(--pad-top) - var(--pad)) * 4 / 3));
   height: min(calc(100dvh - var(--pad-top) - var(--pad)), calc((100vw - 2 * var(--pad)) * 3 / 4));
   overflow: hidden;
@@ -328,7 +330,9 @@ html[data-boot="1"] body > :not(#boot) { visibility: hidden; }
 
 /* ---------- phones: fill the viewport, windows go full screen ---------- */
 @media (max-width: 700px) {
-  .screen { --pad-top: 0px; --pad: 0px; inset: 0; width: 100%; height: 100%; }
+  /* dvh, not %: a fixed box sized by % reaches under a phone's browser toolbar
+     and takes the status line with it */
+  .screen { --pad-top: 0px; --pad: 0px; inset: 0; width: 100%; height: 100dvh; }
   .masthead { padding: 3px 8px; gap: 2px 8px; }
   .masthead .name { font-size: 14px; }
   .masthead nav { gap: 4px; }

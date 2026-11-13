@@ -188,16 +188,14 @@ const postCount = (await getCollection("blog", ({ data }) => !data.draft)).lengt
       })();
     </script>
 
-    <!-- windows: the tabs open the apps in resizable windows on the home screen -->
+    <!-- windows: the site's own pages open in resizable windows on the home screen;
+         the maps and the book live elsewhere and open in a new tab -->
     <script is:inline>
       (function () {
         if (document.documentElement.dataset.framed === "1") return;
         var APPS = [
           { id: "writing", title: "how not to suck at everything.md", path: "/blog", w: 800, h: 600, x: 24, y: 52 },
           { id: "gallery", title: "gallery.exe", path: "/gallery", w: 900, h: 640, x: 48, y: 40 },
-          { id: "etymapology", title: "etymapology.exe", path: "/maps/etymapology", w: 640, h: 480, x: 72, y: 76 },
-          { id: "human-idiot", title: "human idiot.exe", path: "/human-idiot", w: 640, h: 480, x: 120, y: 100 },
-          { id: "haunted", title: "haunted map.exe", url: "https://haunted-map.vercel.app", w: 640, h: 480, x: 168, y: 124 },
           { id: "terminal", title: "LB-DOS", path: "/play", w: 640, h: 440, x: 216, y: 148 }
         ];
         var home = location.pathname === "/" || location.pathname === "/index.html";
