@@ -14,8 +14,8 @@ const BAND = 22, GAP = 7;           // blinds: period and dark gap, in 2x pixels
 const meta = await sharp(SRC).metadata();
 const k = meta.width / 900;         // the crop was picked on a 900px preview
 const crop = { left: 0, top: Math.round(60 * k), width: Math.round(660 * k), height: Math.round(340 * k) };
-const MW = 600;                      // the mountain's width inside the sphere
-const X_OFF = Math.round((W - MW) / 2), Y_OFF = 118; // where the crop lands in the sphere
+const MW = 1170;                     // the mountain is bigger than the sphere: only its top shows, and it runs out the bottom
+const X_OFF = -284, Y_OFF = 88;      // the peak lands centre, a third of the way down
 const horizon = Math.round((372 - 60) * (MW / 660)); // water line inside the resized crop
 const { data, info } = await sharp(SRC).extract(crop).resize(MW).raw().toBuffer({ resolveWithObject: true });
 const CW = info.width, CH = info.height;
@@ -32,13 +32,16 @@ for (let x = 0; x < CW; x++) {
   }
 }
 // the ridge: lift the land up to the tree tops, then round it off into a dome
-const lifted = skyline.map((_, x) => Math.min(...skyline.slice(Math.max(0, x - 6), x + 7)));
+const lifted = skyline.map((_, x) => Math.min(...skyline.slice(Math.max(0, x - 10), x + 11)));
 const smooth = (a, n) => a.map((_, x) => { let s = 0, c = 0; for (let i = x - n; i <= x + n; i++) if (i >= 0 && i < a.length) { s += a[i]; c++; } return s / c; });
-const ridge = smooth(smooth(lifted, 8), 8).map(Math.round);
+let ridge = smooth(smooth(lifted, 14), 14).map(Math.round);
 // the forest left of the dome stands nearly as tall as the dome itself; the
 // Sierra mountain rises out of the lower left, so the left shoulder is cut down
 // to a slope that climbs from the sphere's edge up to the peak
 let peak = Math.round(CW * 0.3); for (let x = peak; x < CW * 0.7; x++) if (ridge[x] < ridge[peak]) peak = x; // the dome, not a tall tree at the edge
+// right of the peak the mountain only falls away: the cliff, then the lower slope, no trees poking up
+for (let x = peak + 1; x < CW; x++) ridge[x] = Math.max(ridge[x], ridge[x - 1]);
+ridge = smooth(ridge, 6).map(Math.round);
 const edgeL = -X_OFF, base = horizon - 10;
 const slopeAt = (x) => { const t = Math.max(0, Math.min(1, (x - edgeL) / (peak - edgeL))); return Math.round(base + (ridge[peak] - base) * Math.pow(t, 0.75)); };
 const ridgeAt = (x) => {
