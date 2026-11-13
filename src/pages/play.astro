@@ -198,7 +198,11 @@
         if (e.key === "ArrowUp" && hi > 0) { hi--; input.value = history[hi]; e.preventDefault(); }
         else if (e.key === "ArrowDown") { hi = Math.min(history.length, hi + 1); input.value = history[hi] || ""; e.preventDefault(); }
       });
-      document.addEventListener("pointerdown", () => input.focus());
+      // any click in the pane puts the cursor on the prompt line, unless you were
+      // selecting output text to copy it
+      document.addEventListener("mousedown", (e) => { if (!out.contains(e.target) && e.target !== input) e.preventDefault(); });
+      document.addEventListener("click", () => { if (!String(window.getSelection && window.getSelection()).length) input.focus(); });
+      window.addEventListener("focus", () => input.focus());
       input.focus();
     </script>
   </body>
