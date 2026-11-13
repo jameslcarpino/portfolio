@@ -2,25 +2,41 @@
 import Base from "../layouts/Base.astro";
 import { getCollection } from "astro:content";
 import { fmtDate } from "../lib";
+import aboutRaw from "../about.md?raw";
+// one line typed = one line shown, each indented like a notebook
+const esc = (t: string) => t.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+// plain text, except [text](url) becomes a link that opens in a new tab
+const aboutLines = aboutRaw.replace(/\r/g, "").trim().split("\n").map((line) =>
+  esc(line).replace(/\[([^\]]+)\]\((https?:\/\/[^)\s]+)\)/g, '<a href="$2" target="_blank" rel="noopener">$1</a>')
+);
+const lastLine = aboutLines.length - 1;
+import { Image } from "astro:assets";
+import { photos } from "../gallery";
+
+const latestPhotos = photos.slice(0, 4);
 
 const posts = (await getCollection("blog", ({ data }) => !data.draft))
   .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf())
   .slice(0, 5);
 ---
-<Base>
-  <section class="intro">
-    <p>
-      I make maps, write things, and work at Mapbox. Formerly a filmmaker,
-      photographer, baker, and wilderness first responder.
-    </p>
+<Base scene="home">
+  <section>
+    <h2>ABOUT</h2>
+    <div class="notebook">
+      {aboutLines.map((line, i) => (line.trim() ? <p class={i === 0 ? "first" : i === lastLine ? "signoff" : undefined} set:html={line} /> : <p class="blank">&nbsp;</p>))}
+    </div>
   </section>
 
   <section>
-    <h2>Things</h2>
+    <h2>PROJECTS</h2>
     <ul class="things">
       <li>
         <a href="/maps/etymapology">Etymapology</a>{" "}
         <span>— a map that traces a word back through time and place.</span>
+      </li>
+      <li>
+        <a href="https://haunted-map.vercel.app">Haunted Map</a>{" "}
+        <span>— a quick map of haunted places in America.</span>
       </li>
       <li>
         <a href="/human-idiot">Human Idiot</a>{" "}
@@ -29,9 +45,22 @@ const posts = (await getCollection("blog", ({ data }) => !data.draft))
     </ul>
   </section>
 
-  {posts.length > 0 && (
+  {latestPhotos.length > 0 && (
     <section>
-      <h2>Writing</h2>
+      <h2>GALLERY</h2>
+      <ul class="grid small">
+        {latestPhotos.map((p) => (
+          <li><a href={`/gallery/${p.slug}`}><Image src={p.image} alt="" width={300} densities={[1, 2]} quality={85} loading="lazy" /></a></li>
+        ))}
+      </ul>
+      <p><a href="/gallery">all photos →</a></p>
+    </section>
+  )}
+
+  <section>
+      <h2>BLOG</h2>
+      {posts.length === 0 && <p>coming soon.</p>}
+      {posts.length > 0 && (
       <ul class="posts">
         {posts.map((post) => (
           <li>
@@ -42,7 +71,7 @@ const posts = (await getCollection("blog", ({ data }) => !data.draft))
           </li>
         ))}
       </ul>
-      <p><a href="/blog">all writing →</a></p>
-    </section>
-  )}
+      )}
+      {posts.length > 0 && <p><a href="/blog">all writing →</a></p>}
+  </section>
 </Base>

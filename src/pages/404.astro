@@ -1,0 +1,14 @@
+---
+import Base from "../layouts/Base.astro";
+---
+<Base title="You have died" scene="none">
+  <section class="death" data-title="You have died">
+    <p>You have wandered off the edge of the map and into the void.</p>
+    <p>Thanks for playing. Perhaps you should have saved your game.</p>
+    <div class="buttons">
+      <button type="button" onclick="history.back()">Restore</button>
+      <a href="/">Restart</a>
+      <a href="https://github.com/jameslcarpino">Quit</a>
+    </div>
+  </section>
+</Base>

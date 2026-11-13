@@ -6,8 +6,10 @@ import { fmtDate } from "../../lib";
 const posts = (await getCollection("blog", ({ data }) => !data.draft))
   .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
 ---
-<Base title="Writing">
-  <h1>Writing</h1>
+<Base title="How Not To Suck at Everything" scene="writing">
+  <section>
+  <h1>How Not To Suck at Everything</h1>
+  {posts.length === 0 && <p>coming soon.</p>}
   <ul class="posts">
     {posts.map((post) => (
       <li>
@@ -19,4 +21,5 @@ const posts = (await getCollection("blog", ({ data }) => !data.draft))
       </li>
     ))}
   </ul>
+  </section>
 </Base>

@@ -1,0 +1,20 @@
+---
+import { Image } from "astro:assets";
+import Base from "../../layouts/Base.astro";
+import { photos } from "../../gallery";
+---
+<Base title="Gallery" scene="writing">
+  <section class="gallery">
+    <h1>Gallery</h1>
+    {photos.length === 0 && <p>No photos yet. Drop some in <code>src/gallery/</code>.</p>}
+    <ul class="grid">
+      {photos.map((p) => (
+        <li>
+          <a href={`/gallery/${p.slug}`}>
+            <Image src={p.image} alt="" width={600} densities={[1, 2]} quality={90} loading="lazy" />
+          </a>
+        </li>
+      ))}
+    </ul>
+  </section>
+</Base>

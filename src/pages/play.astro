@@ -1,0 +1,204 @@
+---
+// LB-DOS: a C:\> shell that can RUN lord_boogers_house_of_horrors.exe,
+// the text adventure in src/game/. Opens inside a window on the home screen;
+// works on its own at /play too.
+---
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>LB-DOS</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link href="https://fonts.googleapis.com/css2?family=VT323&display=swap" rel="stylesheet" />
+    <style>
+      html, body { margin: 0; height: 100%; background: #000; color: #4be04b; }
+      * { box-sizing: border-box; cursor: url("/cursors/arrow.png") 1 1, auto; }
+      body { font: 20px/1.2 "VT323", "Courier New", monospace; display: flex; flex-direction: column; }
+      #out { flex: 1; overflow-y: auto; padding: 10px 12px 0; white-space: pre-wrap; word-wrap: break-word; }
+      #out .cmd { color: #a8f0a8; }
+      #out .dead { color: #e05a6a; }
+      #out .won { color: #f0dca8; }
+      #out .dim { color: #2e8c2e; }
+      form { display: flex; padding: 4px 12px 10px; }
+      form span { flex: none; white-space: pre; }
+      input {
+        flex: 1; margin: 0; padding: 0 0 0 6px; border: 0; outline: 0; background: transparent;
+        color: inherit; font: inherit; caret-color: #4be04b;
+      }
+      ::selection { background: #4be04b; color: #000; }
+      #out::-webkit-scrollbar { width: 10px; } #out::-webkit-scrollbar-thumb { background: #1e4a1e; }
+      a.fuck { position: fixed; left: 50%; top: 50%; transform: translate(-50%, -50%); color: #4be04b; text-decoration: none; font: 22px "VT323", monospace; }
+      a.fuck:hover { text-decoration: underline; }
+    </style>
+  </head>
+  <body>
+    <div id="out" aria-live="polite"></div>
+    <form id="line" autocomplete="off">
+      <span id="prompt">C:\&gt;</span>
+      <input id="in" type="text" aria-label="Command" autocapitalize="off" autocorrect="off" spellcheck="false" />
+    </form>
+    <script is:inline src="/glitch.js"></script>
+    <script>
+      import { Game } from "../game/engine.js";
+      const out = document.getElementById("out");
+      const input = document.getElementById("in");
+      const form = document.getElementById("line");
+      const promptEl = document.getElementById("prompt");
+      const EXE = "lord_boogers_house_of_horrors.exe";
+      const EXE_NAMES = new Set([
+        "lord_boogers_house_of_horrors.exe", "lord_boogers_house_of_horrors",
+        "lord_booger_house_of_horrors.exe", "lord_booger_house_of_horrors", "boogers", "boogers.exe", "lord_boogers",
+      ]);
+      const history = [];
+      let hi = 0;
+      let mode = "shell";
+      let game = null;
+      let startedAt = 0;
+      let recorded = false;
+      function mmss(sec) { return Math.floor(sec / 60) + ":" + String(sec % 60).padStart(2, "0"); }
+
+      function print(text, cls) {
+        const p = document.createElement("div");
+        if (cls) p.className = cls;
+        p.textContent = text;
+        out.appendChild(p);
+        out.scrollTop = out.scrollHeight;
+      }
+      function setPrompt() { promptEl.textContent = mode === "shell" ? "C:\\>" : mode === "initials" ? "INITIALS:" : ">"; }
+
+      // the .secrets payload: pixelate everything, then the machine reboots
+      function glitch() {
+        try { sessionStorage.removeItem("booted"); } catch (e) {}
+        if (window.self !== window.top) { window.parent.postMessage({ lbdos: "glitch" }, location.origin); return "..."; }
+        window.lbGlitch(document.body, () => {
+          const a = document.createElement("a"); a.href = location.pathname; a.textContent = "fuck"; a.className = "fuck";
+          a.addEventListener("click", (ev) => { ev.preventDefault(); location.reload(); });
+          document.body.appendChild(a);
+        });
+        return "...";
+      }
+      // ----- the shell -----
+      const FILES = [
+        { name: EXE, size: "48,213" },
+        { name: "readme.txt", size: "412" },
+        { name: ".secrets", size: "333", hidden: true },
+      ];
+      const SECRET_CMD = "smash --sea --at 3:33 --no-refunds";
+      const norm = (t) => t.toLowerCase().replace(/\s+/g, " ").trim();
+      function shell(line) {
+        const [cmd, ...rest] = line.split(/\s+/);
+        const c = cmd.toLowerCase();
+        const arg = rest.join(" ").toLowerCase();
+        if (c === "dir" || c === "ls") {
+          const all = /^-?\/?a|\/a|-la|-al|-a$/.test(arg) || arg.includes("/a") || arg.includes("-a");
+          const list = FILES.filter((f) => all || !f.hidden);
+          return [
+            " Volume in drive C is HORRORS",
+            " Directory of C:\\",
+            "",
+            ...list.map((f) => `${f.name.padEnd(36)}${f.size.padStart(8)}  11-12-91   3:33a`),
+            `        ${list.length} file(s)     ${all ? "48,958" : "48,625"} bytes`,
+            "                  1,440 bytes free",
+          ].join("\n");
+        }
+        if (norm(line) === SECRET_CMD) return glitch();
+        if (c === "smash") return arg ? "close. copy it exactly." : "smash what?";
+        if (c === "help" || c === "?") return "DIR          list files\nRUN <file>   run a program\nOPEN <file>  open a file\nTYPE <file>  show a text file\nCLS          clear the screen\n\nTry: open readme.txt";
+        if (c === "cls" || c === "clear") { out.textContent = ""; return ""; }
+        const README = "help me... the darkness... it surrounds. if i am not able to escape i fear it will swallow me. if we do not smash the sea, the sea will smash us. so i ask, if we do not smash the sea, who will? so i answer. i answer the call. i smash the sea, so the sea cannot smash us.";
+        const isReadme = (a) => a === "readme.txt" || a === "readme";
+        const isSecrets = (a) => a === ".secrets" || a === "secrets";
+        // .secrets: open/type shows what is inside; run/exec (or the bare name) runs it
+        if ((c === "open" || c === "type" || c === "cat" || c === "more" || c === "edit") && isSecrets(arg))
+          return "#!/bin/booger\n# copy this and run it at the prompt:\n\n    " + SECRET_CMD + "\n";
+        if (isSecrets(c) || ((c === "run" || c === "start" || c === "exec") && isSecrets(arg))) return glitch();
+        if (c === "type" || c === "cat" || c === "more" || c === "edit") {
+          if (isReadme(arg)) return README;
+          return arg ? "File not found - " + arg.toUpperCase() : "Required parameter missing";
+        }
+        if (c === "run" || c === "start" || c === "open" || c === "exec" || c === "load") {
+          if (!arg) return (c === "open" ? "Open" : "Run") + " what? Try DIR.";
+          if (EXE_NAMES.has(arg)) return launch();
+          if (isReadme(arg)) return README;
+          return "Bad command or file name - " + arg.toUpperCase();
+        }
+        if (isReadme(c)) return README;
+        if (EXE_NAMES.has(c)) return launch();
+        if (c === "exit" || c === "quit") return "There is no outside. This is the terminal.";
+        if (c === "ver") return "LB-DOS Version 1.0";
+        if (c === "cd") return "C:\\";
+        if (c === "format") return "Absolutely not.";
+        return "Bad command or file name";
+      }
+      function launch() {
+        mode = "game";
+        try { localStorage.setItem("boogers:ran", "1"); } catch (e) {}
+        game = new Game(print);
+        startedAt = Date.now();
+        recorded = false;
+        setPrompt();
+        // clear the shell and show the opening from its first line, not its last
+        out.textContent = "";
+        print(game.begin() + "\n");
+        out.scrollTop = 0;
+        return "";
+      }
+
+      // ----- boot -----
+      const logo = document.createElement("img");
+      logo.src = "/icons/lbhh.png"; logo.width = 64; logo.height = 64; logo.alt = "LB-DOS";
+      logo.style.cssText = "display:block;image-rendering:pixelated;margin:4px 0 8px";
+      out.appendChild(logo);
+      print("LB-DOS Version 1.0\n(C) Copyright 1991 Lord Booger. No refunds.\n", "dim");
+      print("Type DIR to see what's here, or HELP.\n", "dim");
+
+      form.addEventListener("submit", (e) => {
+        e.preventDefault();
+        const line = input.value.trim();
+        input.value = "";
+        if (!line) return;
+        history.push(line); hi = history.length;
+        print(promptEl.textContent + " " + line, "cmd");
+        if (mode === "shell") {
+          const reply = shell(line);
+          if (reply) print(reply + "\n");
+          return;
+        }
+        if (/^(quit|exit)$/i.test(line)) {
+          mode = "game-exit";
+          print("Leaving so soon? The horrors will keep.\n");
+          mode = "shell"; game = null; setPrompt();
+          return;
+        }
+        if (mode === "initials") {
+          const name = line.toUpperCase().replace(/[^A-Z0-9]/g, "").slice(0, 3);
+          mode = "game"; setPrompt();
+          if (!name) { print("No initials, no fame. Fair enough.\n"); return; }
+          const seconds = Math.round((Date.now() - startedAt) / 1000);
+          recorded = true;
+          fetch("/api/scores", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ name, seconds }) })
+            .then((r) => r.json())
+            .then((d) => print(d.ok ? name + " " + mmss(seconds) + " is on the board. Check the ticker.\n" : d.offline ? "The hall of fame is offline right now. Your time was " + mmss(seconds) + ". We believe you.\n" : "The board declined that one.\n"))
+            .catch(() => print("The hall of fame could not be reached.\n"));
+          return;
+        }
+        const wasOver = game.over;
+        const reply = game.run(line);
+        print(reply + "\n", game.over === "dead" ? "dead" : game.over === "won" ? "won" : "");
+        if (game.over === "won" && !wasOver && !recorded) {
+          const seconds = Math.round((Date.now() - startedAt) / 1000);
+          print("Time: " + mmss(seconds) + ". Enter three initials for the HALL OF FAME, or press Enter to skip.", "won");
+          mode = "initials"; setPrompt();
+        }
+        if (line.trim().toLowerCase() === "restart") { startedAt = Date.now(); recorded = false; }
+      });
+      input.addEventListener("keydown", (e) => {
+        if (e.key === "ArrowUp" && hi > 0) { hi--; input.value = history[hi]; e.preventDefault(); }
+        else if (e.key === "ArrowDown") { hi = Math.min(history.length, hi + 1); input.value = history[hi] || ""; e.preventDefault(); }
+      });
+      document.addEventListener("pointerdown", () => input.focus());
+      input.focus();
+    </script>
+  </body>
+</html>

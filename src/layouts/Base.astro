@@ -1,12 +1,16 @@
 ---
 import "../styles/zine.css";
+import { getCollection } from "astro:content";
 
 interface Props {
   title?: string;
   description?: string;
+  scene?: "home" | "writing" | "post" | "none";
 }
-const { title, description } = Astro.props;
+const { title, description, scene = "home" } = Astro.props;
 const fullTitle = title ? `${title} — James Carpino` : "James Carpino";
+
+const postCount = (await getCollection("blog", ({ data }) => !data.draft)).length;
 ---
 <!doctype html>
 <html lang="en">
@@ -15,25 +19,395 @@ const fullTitle = title ? `${title} — James Carpino` : "James Carpino";
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>{fullTitle}</title>
     {description && <meta name="description" content={description} />}
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Roboto+Slab:wght@300;400;500&family=VT323&display=swap" rel="stylesheet" />
+    <link href="https://fontlibrary.org/face/chicagoflf" rel="stylesheet" />
     <link rel="icon" href="/favicon.ico" sizes="32x32" />
     <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <script is:inline>
+      // Before first paint: decide whether to boot, and restore the scanline switch.
+      (function () {
+        var root = document.documentElement;
+        if (window.self !== window.top) { root.dataset.framed = "1"; return; }
+        try {
+          if (!sessionStorage.getItem("booted")) root.dataset.boot = "1";
+        } catch (e) {}
+      })();
+    </script>
   </head>
   <body>
-    <header class="masthead">
-      <a class="name" href="/">James Carpino</a>
-      <nav>
-        <a href="/blog">writing</a>
-        <a href="/maps/etymapology">etymapology</a>
-        <a href="/human-idiot">human idiot</a>
-      </nav>
-    </header>
+    <div class="screen">
+    <div class={`scene scene-${scene}`} aria-hidden="true"></div>
+    <div class="viewport">
+    <div class="hud">
+      <header class="masthead">
+        <a class="name" href="/">James Carpino</a>
+        <nav>
+          <a href="mailto:jameslcarpino@gmail.com">email</a>
+          <a href="https://github.com/jameslcarpino">github</a>
+          <a href="https://www.linkedin.com/in/jameslcarpino">linkedin</a>
+        </nav>
+      </header>
+    </div>
     <main>
       <slot />
     </main>
-    <footer>
-      <p>
-        <a href="mailto:jameslcarpino@gmail.com">email</a>{" · "}<a href="https://github.com/jameslcarpino">github</a>
-      </p>
+    </div>
+    <footer class="status">
+      <span>VIEWS: <span id="views">&#8212;</span></span>
+      <span class="ticker" aria-label="Hall of fame"><span id="ticker-text"></span></span>
+      <span>SINCE: 1991</span>
     </footer>
+
+    <!-- dialogue box title bars: minimize to the tray at the bottom, remembered per page -->
+    <div class="tray" aria-label="Minimized"></div>
+    <a class="desk-icon" href="/play"><img src="/icons/lbhh.png" width="64" height="64" alt="" /><span>LB-DOS</span></a>
+    </div>
+    <script is:inline>
+      (function () {
+        if (document.documentElement.dataset.framed === "1") return;
+        // one thing has focus at a time: a box or a window; everything else is shaded
+        var SEL = ".win, main > section, main > article";
+        window.__activate = function (el) {
+          Array.prototype.forEach.call(document.querySelectorAll(SEL + ", .tray > *"), function (n) { n.classList.remove("active"); });
+          if (el && !el.closest(".tray")) { el.classList.add("active"); document.body.classList.add("has-focus"); }
+          else document.body.classList.remove("has-focus");
+        };
+        document.addEventListener("pointerdown", function (e) {
+          var t = e.target.closest && e.target.closest(SEL + ", .hud, .status, .tray");
+          if (!t) { window.__activate(null); return; }
+          if (t.matches(SEL)) window.__activate(t);
+        }, true);
+        var cards = document.querySelectorAll("main > section, main > article");
+        var tray = document.querySelector(".tray");
+        var key = "min2:" + location.pathname;
+        var saved = {};
+        try { saved = JSON.parse(localStorage.getItem(key) || "{}"); } catch (e) {}
+        function save() { try { localStorage.setItem(key, JSON.stringify(saved)); } catch (e) {} }
+        Array.prototype.forEach.call(cards, function (card, i) {
+          var head = card.querySelector("h1, h2, h3");
+          var title = card.dataset.title || (head && head.textContent.trim()) || "";
+          var id = title || String(i);
+          if (head && !card.dataset.title) head.classList.add("lifted");
+          var slot = document.createElement("span");
+          slot.className = "slot";
+          slot.hidden = true;
+          card.parentNode.insertBefore(slot, card);
+          var bar = document.createElement("div");
+          bar.className = "bar";
+          var label = document.createElement("span");
+          label.textContent = title;
+          var btn = document.createElement("button");
+          btn.type = "button";
+          function render() {
+            var min = !!saved[id];
+            card.classList.toggle("min", min);
+            if (min) tray.appendChild(card);
+            else slot.parentNode.insertBefore(card, slot.nextSibling);
+            btn.textContent = min ? "+" : "\u2013";
+            btn.setAttribute("aria-expanded", String(!min));
+            btn.setAttribute("aria-label", (min ? "Restore " : "Minimize ") + title);
+          }
+          function toggle() {
+            saved[id] = !saved[id]; save(); render();
+            // a box you bring back takes the focus; a box you put away gives it up
+            if (window.__activate) window.__activate(saved[id] ? null : card);
+          }
+          btn.addEventListener("click", function (e) { e.stopPropagation(); toggle(); });
+          bar.addEventListener("click", function () { if (card.classList.contains("min")) toggle(); });
+          bar.appendChild(label);
+          bar.appendChild(btn);
+          card.insertBefore(bar, card.firstChild);
+          render();
+        });
+      })();
+    </script>
+
+    <!-- view counter: one count per browser session, read-only after that -->
+    <script is:inline>
+      (function () {
+        if (document.documentElement.dataset.framed === "1") return;
+        var el = document.getElementById("views");
+        if (!el) return;
+        var counted = false;
+        try { counted = !!sessionStorage.getItem("viewed"); } catch (e) {}
+        fetch("/api/views", { method: counted ? "GET" : "POST" })
+          .then(function (r) { return r.json(); })
+          .then(function (d) {
+            if (typeof d.views !== "number") return;
+            el.textContent = d.views.toLocaleString("en-US");
+            try { sessionStorage.setItem("viewed", "1"); } catch (e) {}
+          })
+          .catch(function () {});
+      })();
+    </script>
+
+    <!-- hall of fame ticker: fastest wins of the game, refreshed every minute -->
+    <script is:inline>
+      (function () {
+        if (document.documentElement.dataset.framed === "1") return;
+        var el = document.getElementById("ticker-text");
+        if (!el) return;
+        var SEP = "   \u00b7   ";
+        function mmss(s) { return Math.floor(s / 60) + ":" + String(s % 60).padStart(2, "0"); }
+        function render(scores) {
+          var text;
+          if (!scores || !scores.length) text = "HALL OF FAME" + SEP + "NOBODY HAS ESCAPED LORD BOOGER'S HOUSE OF HORRORS WITH PROOF YET";
+          else text = "HALL OF FAME" + SEP + scores.map(function (s, i) { return (i + 1) + ". " + s.name + " " + mmss(s.seconds); }).join(SEP);
+          el.textContent = text + SEP;
+          el.style.animationDuration = Math.max(12, text.length / 6) + "s";
+        }
+        function load() {
+          fetch("/api/scores").then(function (r) { return r.json(); }).then(function (d) { render(d.scores); }).catch(function () { render(null); });
+        }
+        // the hall of fame only shows to someone who has run the game at least once
+        var started = false;
+        function ran() { try { return localStorage.getItem("boogers:ran") === "1"; } catch (e) { return false; } }
+        function start() { if (started || !ran()) return; started = true; load(); setInterval(load, 60000); }
+        start();
+        window.addEventListener("storage", function (e) { if (e.key === "boogers:ran") start(); });
+      })();
+    </script>
+
+    <!-- .secrets: a window may ask the whole screen to glitch out -->
+    <script is:inline src="/glitch.js"></script>
+    <script is:inline>
+      (function () {
+        if (document.documentElement.dataset.framed === "1") return;
+        window.addEventListener("message", function (e) {
+          if (e.origin !== location.origin || !e.data || e.data.lbdos !== "glitch") return;
+          try { sessionStorage.removeItem("booted"); } catch (err) {}
+          window.lbGlitch(document.querySelector(".screen"), function () {
+            var a = document.createElement("a");
+            a.href = location.pathname; a.textContent = "fuck"; a.className = "fuck";
+            a.addEventListener("click", function (ev) { ev.preventDefault(); location.reload(); });
+            document.body.appendChild(a);
+          });
+        });
+      })();
+    </script>
+
+    <!-- windows: the tabs open the apps in resizable windows on the home screen -->
+    <script is:inline>
+      (function () {
+        if (document.documentElement.dataset.framed === "1") return;
+        var APPS = [
+          { id: "writing", title: "how not to suck at everything.md", path: "/blog", w: 800, h: 600, x: 24, y: 52 },
+          { id: "gallery", title: "gallery.exe", path: "/gallery", w: 900, h: 640, x: 48, y: 40 },
+          { id: "etymapology", title: "etymapology.exe", path: "/maps/etymapology", w: 640, h: 480, x: 72, y: 76 },
+          { id: "human-idiot", title: "human idiot.exe", path: "/human-idiot", w: 640, h: 480, x: 120, y: 100 },
+          { id: "haunted", title: "haunted map.exe", url: "https://haunted-map.vercel.app", w: 640, h: 480, x: 168, y: 124 },
+          { id: "terminal", title: "LB-DOS", path: "/play", w: 640, h: 440, x: 216, y: 148 }
+        ];
+        var home = location.pathname === "/" || location.pathname === "/index.html";
+        var tray = document.querySelector(".tray"), scr = document.querySelector(".screen");
+        var KEY = "win:v1", state = {}, wins = {}, z = 10;
+        try { state = JSON.parse(localStorage.getItem(KEY) || "{}"); } catch (e) {}
+        function save() { try { localStorage.setItem(KEY, JSON.stringify(state)); } catch (e) {} }
+
+        function appFor(href) {
+          var u; try { u = new URL(href, location.href); } catch (e) { return null; }
+          for (var i = 0; i < APPS.length; i++) {
+            var app = APPS[i];
+            if (app.url) {
+              if (u.href === app.url || u.href.indexOf(app.url + "/") === 0) return { app: app, src: u.href };
+            } else if (u.origin === location.origin) {
+              if (u.pathname === app.path || u.pathname.indexOf(app.path + "/") === 0)
+                return { app: app, src: u.pathname + u.search + u.hash };
+            }
+          }
+          return null;
+        }
+
+        // any in-site link into an app opens it in its window
+        document.addEventListener("click", function (e) {
+          if (e.defaultPrevented || e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
+          var a = e.target.closest && e.target.closest("a[href]");
+          if (!a || a.target === "_blank") return;
+          var hit = appFor(a.getAttribute("href"));
+          if (!hit) return;
+          e.preventDefault();
+          if (!home) { location.href = "/#open=" + encodeURIComponent(hit.src); return; }
+          show(hit.app, hit.src, true);
+        });
+        if (!home) return;
+
+        function raise(w) { w.style.zIndex = ++z; window.__activate(w); }
+        function clamp(n, lo, hi) { return Math.max(lo, Math.min(hi, n)); }
+
+        function place(w, app, st) {
+          var mb = w.querySelector(".wbtns button");
+          if (mb) mb.textContent = st.min ? "+" : "\u2013";
+          if (st.min) { w.classList.add("min"); tray.appendChild(w); return; }
+          w.classList.remove("min");
+          if (w.parentNode !== scr) scr.appendChild(w);
+          var vw = scr.clientWidth, vh = scr.clientHeight;
+          var wd = clamp(st.w || app.w, 240, vw - 8), ht = clamp(st.h || app.h, 120, vh - 60);
+          var x = clamp(st.x == null ? app.x : st.x, 0, Math.max(0, vw - wd));
+          var y = clamp(st.y == null ? app.y : st.y, 0, Math.max(0, vh - 60));
+          w.style.setProperty("--x", x + "px"); w.style.setProperty("--y", y + "px");
+          w.style.setProperty("--w", wd + "px"); w.style.setProperty("--h", ht + "px");
+        }
+
+        function build(app) {
+          var st = state[app.id];
+          var w = document.createElement("div");
+          w.className = "win"; w.dataset.app = app.id;
+          var bar = document.createElement("div"); bar.className = "bar";
+          var label = document.createElement("span"); label.textContent = app.title;
+          var btns = document.createElement("span"); btns.className = "wbtns";
+          var minb = document.createElement("button"); minb.type = "button"; minb.textContent = "\u2013"; minb.setAttribute("aria-label", "Minimize " + label.textContent);
+          var xb = document.createElement("button"); xb.type = "button"; xb.textContent = "\u00d7"; xb.setAttribute("aria-label", "Close " + label.textContent);
+          btns.appendChild(minb); btns.appendChild(xb);
+          bar.appendChild(label); bar.appendChild(btns);
+          var frame = document.createElement("iframe");
+          frame.title = label.textContent;
+          frame.src = st.src || app.url || app.path;
+          w.appendChild(bar); w.appendChild(frame);
+
+          function restore() { st.min = false; place(w, app, st); raise(w); save(); }
+          minb.addEventListener("click", function (e) {
+            e.stopPropagation();
+            if (st.min) { restore(); return; }
+            st.min = true; place(w, app, st); window.__activate(null); save();
+          });
+          xb.addEventListener("click", function (e) { e.stopPropagation(); st.open = false; w.remove(); delete wins[app.id]; window.__activate(null); save(); });
+          bar.addEventListener("click", function () { if (st.min) restore(); });
+          w.addEventListener("pointerdown", function () { if (!st.min) raise(w); });
+
+          // drag by the title bar
+          bar.addEventListener("pointerdown", function (e) {
+            if (st.min || e.button !== 0 || (e.target.closest && e.target.closest("button"))) return;
+            var r = scr.getBoundingClientRect();
+            var sx = e.clientX - r.left - w.offsetLeft, sy = e.clientY - r.top - w.offsetTop;
+            bar.setPointerCapture(e.pointerId);
+            document.body.classList.add("dragging");
+            function mv(ev) {
+              st.x = clamp(ev.clientX - r.left - sx, 0, Math.max(0, scr.clientWidth - w.offsetWidth));
+              st.y = clamp(ev.clientY - r.top - sy, 0, Math.max(0, scr.clientHeight - 60));
+              w.style.setProperty("--x", st.x + "px"); w.style.setProperty("--y", st.y + "px");
+            }
+            function up() {
+              bar.removeEventListener("pointermove", mv); bar.removeEventListener("pointerup", up); bar.removeEventListener("pointercancel", up);
+              document.body.classList.remove("dragging"); save();
+            }
+            bar.addEventListener("pointermove", mv); bar.addEventListener("pointerup", up); bar.addEventListener("pointercancel", up);
+            e.preventDefault();
+          });
+
+          // remember the size after a corner resize
+          if (window.ResizeObserver) new ResizeObserver(function () {
+            if (st.min || !w.isConnected) return;
+            var cw = w.offsetWidth, ch = w.offsetHeight;
+            if (cw && ch && (cw !== st.w || ch !== st.h)) { st.w = cw; st.h = ch; save(); }
+          }).observe(w);
+
+          // keep the saved src in step with where the frame navigates
+          frame.addEventListener("load", function () {
+            try { var l = frame.contentWindow.location; st.src = l.pathname + l.search + l.hash; save(); } catch (e) {}
+          });
+
+          wins[app.id] = w;
+          scr.appendChild(w);
+          return w;
+        }
+
+        function show(app, src, raise_) {
+          var st = state[app.id] = state[app.id] || {};
+          st.open = true; st.min = false;
+          var w = wins[app.id] || build(app);
+          var frame = w.querySelector("iframe");
+          if (src && frame.getAttribute("src") !== src) { st.src = src; frame.src = src; }
+          place(w, app, st);
+          if (raise_) raise(w);
+          save();
+        }
+
+        // raise a window when its frame takes focus
+        window.addEventListener("blur", function () {
+          setTimeout(function () {
+            var el = document.activeElement, w = el && el.closest && el.closest(".win");
+            if (w) raise(w);
+          }, 0);
+        });
+        window.addEventListener("resize", function () {
+          APPS.forEach(function (app) { if (wins[app.id]) place(wins[app.id], app, state[app.id]); });
+        });
+
+        // restore last session's windows, then honour a #open= hash
+        APPS.forEach(function (app) {
+          var st = state[app.id];
+          if (st && st.open) { var w = build(app); place(w, app, st); if (!st.min) raise(w); }
+        });
+        var m = location.hash.match(/^#open=(.+)$/);
+        if (m) {
+          var hit = appFor(decodeURIComponent(m[1]));
+          if (hit) show(hit.app, hit.src, true);
+          history.replaceState(null, "", location.pathname);
+        }
+      })();
+    </script>
+
+    <!-- boot sequence, shown once per session -->
+    <div id="boot" aria-hidden="true">
+      <pre id="dos"></pre>
+      <div id="logo"><span class="mark">James Carpino</span><span class="presents">presents</span></div>
+      <p class="anykey">press any key</p>
+    </div>
+
+    <script is:inline>
+      (function () {
+        var root = document.documentElement;
+        // boot
+        if (root.dataset.boot !== "1") return;
+        var boot = document.getElementById("boot");
+        var dos = document.getElementById("dos");
+        var done = false;
+        function finish() {
+          if (done) return;
+          done = true;
+          try { sessionStorage.setItem("booted", "1"); } catch (e) {}
+          delete root.dataset.boot;
+          boot.remove();
+          window.removeEventListener("keydown", key);
+          window.removeEventListener("pointerdown", key);
+        }
+        // typing -> waiting for a key -> logo -> done. Nothing moves past the
+        // prompt until a key is pressed; a key during typing just finishes the typing.
+        var script = "C:\\>cd sierra\nC:\\SIERRA>carpino.exe\n\nLoading...\nPress any key to continue.\n";
+        var T0 = performance.now(), T_TYPE = 2200, T_LOGO_HOLD = 1300;
+        var state = "typing";
+        function showLogo() {
+          state = "logo";
+          boot.classList.add("logo");
+          setTimeout(finish, T_LOGO_HOLD);
+        }
+        function key(e) {
+          if (done) return;
+          if (state === "typing") { state = "waiting"; return; }
+          if (state === "waiting") { showLogo(); return; }
+          finish();
+        }
+        window.addEventListener("keydown", key);
+        window.addEventListener("pointerdown", key);
+        var blink = 0;
+        function frame() {
+          if (done) return;
+          var t = performance.now() - T0;
+          if (state === "typing") {
+            var n = Math.min(script.length, Math.floor((t / T_TYPE) * script.length));
+            dos.textContent = script.slice(0, n) + "_";
+            if (n >= script.length) state = "waiting";
+          } else if (state === "waiting") {
+            // full text, blinking cursor, and we sit here until a key
+            blink = Math.floor(t / 500) % 2;
+            dos.textContent = script + (blink ? "_" : " ");
+          }
+          requestAnimationFrame(frame);
+        }
+        requestAnimationFrame(frame);
+      })();
+    </script>
   </body>
 </html>

@@ -1,0 +1,28 @@
+---
+import { Image } from "astro:assets";
+import Base from "../../layouts/Base.astro";
+import { photos } from "../../gallery";
+import { fmtDate } from "../../lib";
+
+export function getStaticPaths() {
+  return photos.map((p, i) => ({ params: { slug: p.slug }, props: { photo: p, prev: photos[i - 1] ?? null, next: photos[i + 1] ?? null, index: i } }));
+}
+const { photo, prev, next, index } = Astro.props;
+---
+<Base title="Gallery" scene="post">
+  <article class="photo">
+    <a href={photo.image.src} target="_blank" rel="noopener">
+      <Image src={photo.image} alt="" width={Math.min(photo.image.width, 2400)} widths={[900, 1400, 2000, 2400].filter((w) => w <= photo.image.width)} sizes="(max-width: 1000px) 100vw, 1000px" quality={92} />
+    </a>
+    <p class="meta">
+      {photo.date && <span>added <time datetime={photo.date.toISOString()}>{fmtDate(photo.date, "long")}</time></span>}
+      <span>{index + 1} / {photos.length}</span>
+      <a href={photo.image.src} target="_blank" rel="noopener">full size ↗</a>
+    </p>
+    <p class="pager">
+      {prev ? <a href={`/gallery/${prev.slug}`}>← prev</a> : <span>← prev</span>}
+      <a href="/gallery">all photos</a>
+      {next ? <a href={`/gallery/${next.slug}`}>next →</a> : <span>next →</span>}
+    </p>
+  </article>
+</Base>
