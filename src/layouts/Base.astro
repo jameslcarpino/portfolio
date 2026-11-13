@@ -309,6 +309,12 @@ const postCount = (await getCollection("blog", ({ data }) => !data.draft)).lengt
         if (!home) return;
 
         function raise(w) { window.__top(w); window.__activate(w); }
+        // while the boot screen is up the keyboard belongs to it, not to a frame
+        function booting() { return document.documentElement.dataset.boot === "1"; }
+        window.addEventListener("boot:done", function () {
+          var w = document.querySelector(".win.active:not(.min) iframe");
+          if (w) w.focus();
+        });
         function clamp(n, lo, hi) { return Math.max(lo, Math.min(hi, n)); }
 
         function place(w, app, st) {
@@ -382,7 +388,7 @@ const postCount = (await getCollection("blog", ({ data }) => !data.draft)).lengt
           // keyboard focus when it is the window on top (so the terminal prompt is live)
           frame.addEventListener("load", function () {
             try { var l = frame.contentWindow.location; st.src = l.pathname + l.search + l.hash; save(); } catch (e) {}
-            if (w.classList.contains("active") && !st.min) frame.focus();
+            if (w.classList.contains("active") && !st.min && !booting()) frame.focus();
           });
 
           wins[app.id] = w;
@@ -449,7 +455,21 @@ const postCount = (await getCollection("blog", ({ data }) => !data.draft)).lengt
           boot.remove();
           window.removeEventListener("keydown", key);
           window.removeEventListener("pointerdown", key);
+          window.removeEventListener("blur", reclaim);
+          window.dispatchEvent(new Event("boot:done"));
         }
+        // "press any key" needs the keys: if a frame takes focus while we boot, take it back
+        function reclaim() {
+          if (done) return;
+          setTimeout(function () {
+            if (done) return;
+            var a = document.activeElement;
+            if (a && a.tagName === "IFRAME") a.blur();
+            window.focus();
+          }, 0);
+        }
+        window.addEventListener("blur", reclaim);
+        window.focus();
         // typing -> waiting for a key -> logo -> done. Nothing moves past the
         // prompt until a key is pressed; a key during typing just finishes the typing.
         var script = "C:\\>cd sierra\nC:\\SIERRA>carpino.exe\n\nLoading...\nPress any key to continue.\n";
