@@ -14,7 +14,7 @@ const BAND = 22, GAP = 7;           // blinds: period and dark gap, in 2x pixels
 const meta = await sharp(SRC).metadata();
 const k = meta.width / 900;         // the crop was picked on a 900px preview
 const crop = { left: 0, top: Math.round(60 * k), width: Math.round(660 * k), height: Math.round(340 * k) };
-const MW = 470;                      // the mountain's width inside the sphere
+const MW = 600;                      // the mountain's width inside the sphere
 const X_OFF = Math.round((W - MW) / 2), Y_OFF = 118; // where the crop lands in the sphere
 const horizon = Math.round((372 - 60) * (MW / 660)); // water line inside the resized crop
 const { data, info } = await sharp(SRC).extract(crop).resize(MW).raw().toBuffer({ resolveWithObject: true });
@@ -56,6 +56,7 @@ const cuts = [q(0.22), q(0.48), q(0.72), q(0.9)];
 const hex = (h) => [parseInt(h.slice(1, 3), 16), parseInt(h.slice(3, 5), 16), parseInt(h.slice(5, 7), 16)];
 const lerp = (a, b, t) => a.map((v, i) => Math.round(v + (b[i] - v) * t));
 const SKY_TOP = hex("#d2f9ff"), SKY_MID = hex("#36c4f4"), SKY_BOT = hex("#0b5fc4");
+const SEA_TOP = hex("#2f9fe8"), SEA_BOT = hex("#0a47ad");
 const ROCK = ["#071f58", "#0a327f", "#1250ad", "#2a7fd6", "#5fb6ec"].map(hex);
 
 const out = Buffer.alloc(W * H * 4);
@@ -66,9 +67,13 @@ for (let y = 0; y < H; y++) {
     if (dx * dx + dy * dy > R * R) continue;            // outside the sphere: clear
     if (y % BAND < GAP) continue;                        // the blinds
     const cy = y - Y_OFF, cx = x - X_OFF;                // position inside the crop
-    const land = cy >= 0 && (cy >= horizon || cy >= ridgeAt(cx));
+    const land = cy >= 0 && cy < horizon && cy >= ridgeAt(cx);
     let c;
-    if (!land) {
+    if (cy >= horizon) {
+      // below the water line the mountain floats on the sphere's own blue, as in the original
+      const t = (cy - horizon) / (CY + R - Y_OFF - horizon);
+      c = lerp(SEA_TOP, SEA_BOT, Math.min(1, t));
+    } else if (!land) {
       const t = (y - (CY - R)) / (2 * R);
       c = t < 0.55 ? lerp(SKY_TOP, SKY_MID, t / 0.55) : lerp(SKY_MID, SKY_BOT, (t - 0.55) / 0.45);
     } else {
@@ -76,7 +81,7 @@ for (let y = 0; y < H; y++) {
       if (cy < horizon && cx >= 0 && cx < CW) {
         const [r, g, b] = px(cx, cy); const lum = 0.3 * r + 0.59 * g + 0.11 * b;
         i = lum < cuts[0] ? 0 : lum < cuts[1] ? 1 : lum < cuts[2] ? 2 : lum < cuts[3] ? 3 : 4;
-      } else i = cy < horizon ? 1 : 0;                   // beyond the photo, and the base under the water line
+      } else i = 1;                                      // beyond the photo
       c = ROCK[i];
       // the sphere's shine: brighter toward the upper left, like the original
       const shine = Math.max(0, 1 - Math.hypot(x - 200, y - 200) / 520) * 0.18;
